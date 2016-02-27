@@ -1,0 +1,62 @@
+				Some ideas to make language better 
+
+1. Maintain HashTables with strings as keys
+2. Maintaining FilePointer that contains information like current line number, number of lines read, column number etc. 
+3. Leave out regex expressions
+4. Maintain String as datatype making data processing easier as primary file types are text files
+5. Find and replace functionalities should be implemented 
+6. Should contain good support for various printing formats (print $1 $2 )
+7. 
+
+Reference Links: -
+
+1. http://perldoc.perl.org/perldsc.html#MORE-ELABORATE-RECORDS
+2. http://perldoc.perl.org/perlfaq4.html
+3. http://perldoc.perl.org/perlfaq5.html
+
+Doubts: - 
+
+1. Should we introduce constants in language? 
+2. Include Error handling and exceptions?
+3. Maintain list and arrays as different data structures?
+4. Function definition?
+5. How to define multi-dimension arrays? Is there a need for creating such data structures?
+6. Should we define start and End of programs?
+
+
+
+
+
+Inbuilt functions: - 
+
+Sort 
+split
+length
+open
+substring??
+merge??
+divide??
+
+
+keywords: -
+
+if 
+else
+while
+foreach
+
+
+
+Some symbols: -
+
+
+| - Pipe Combining results or Print combine results using , 
+@ - Call a function or (@array[12,4,5,2]) to access slice of array
+{} expressions - 
+$ - refer a variable? like Perl
+-> 
+>> insert into file directly 
+\n
+?
+::
+
