@@ -1,0 +1,13 @@
+opam-version: "1"
+maintainer: "jun.furuse@gmail.com"
+build: [
+  ["omake"]
+  ["omake" "install"]
+]
+remove: [["ocamlfind" "remove" "camlimages"]]
+depends: [
+  "ocamlfind"
+  "lablgtk"
+  "omake"
+]
+ocaml-version: [<= "4.01.0"]

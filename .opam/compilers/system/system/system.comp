@@ -1,0 +1,10 @@
+opam-version: "1.2.2"
+version: "4.01.0"
+
+
+
+
+packages: ["base-unix" "base-bigarray" "base-threads"]
+env: [[ CAML_LD_LIBRARY_PATH = "%{lib}%/stublibs:/usr/lib/ocaml/stublibs" ]]
+
+preinstalled: true

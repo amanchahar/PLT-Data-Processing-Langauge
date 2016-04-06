@@ -1,0 +1,9 @@
+base-bigarray base
+base-bytes legacy
+base-ocamlbuild base
+base-threads base
+base-unix base
+ctypes 0.3.4
+llvm 3.6
+ocamlbuild 0
+ocamlfind 1.5.6

@@ -1,0 +1,23 @@
+opam-version: "1.2"
+maintainer: "ygrek@autistici.org"
+homepage: "http://0install.net/"
+build: [
+  [make]
+]
+patches: [ "gui_gtk_dir.patch" ]
+depends: [
+  "yojson"
+  "xmlm"
+  "ounit"
+  "react"
+  "lwt"
+  "extlib"
+  "ssl"
+  "ocurl"
+  "ocamlbuild" {build}
+]
+depopts: [ "obus" "lablgtk" ]
+depexts: [
+  [["ubuntu"] ["unzip"]]
+  [["debian"] ["unzip"]]
+]
