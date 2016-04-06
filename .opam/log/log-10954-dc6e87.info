@@ -1,0 +1,7 @@
+[33m#[m [33mopam-version[m 1.2.2
+[33m#[m [33mos[m           linux
+[33m#[m [33mcommand[m      patch -p0 -i /home/plt/.opam/system/build/ctypes.0.3.4/build_with_trunk.patch --dry-run
+[33m#[m [33mpath[m         /home/plt/.opam/system/build/ctypes.0.3.4
+[33m#[m [33menv-file[m     /home/plt/.opam/log/log-10954-dc6e87.env
+[33m#[m [33mstdout-file[m  /home/plt/.opam/log/log-10954-dc6e87.out
+[33m#[m [33mstderr-file[m  /home/plt/.opam/log/log-10954-dc6e87.err

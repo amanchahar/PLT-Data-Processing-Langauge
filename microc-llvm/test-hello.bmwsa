@@ -1,0 +1,6 @@
+
+int main()
+{
+  printstring("Hello, world This is Aman\n");
+  return 0;
+}

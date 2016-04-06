@@ -1,0 +1,12 @@
+can't find file to patch at input line 4
+Perhaps you used the wrong -p or --strip option?
+The text leading up to this was:
+--------------------------
+|diff -ru ctypes.0.3.4/src/ctypes/type_info_stubs.c ctypes.0.3.4_/src/ctypes/type_info_stubs.c
+|--- ctypes.0.3.4/src/ctypes/type_info_stubs.c	2014-12-23 01:11:05.000000000 +0100
+|+++ ctypes.0.3.4_/src/ctypes/type_info_stubs.c	2015-02-27 15:43:17.232556328 +0100
+--------------------------
+File to patch: 
+Skip this patch? [y] 
+Skipping patch.
+2 out of 2 hunks ignored
