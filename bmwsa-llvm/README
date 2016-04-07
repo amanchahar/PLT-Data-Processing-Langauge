@@ -1,3 +1,5 @@
+This code has been extended from Microc. 
+
 The MicroC compiler
 
 Coded in OCaml, this takes a highly stripped-down subset of C (ints,
