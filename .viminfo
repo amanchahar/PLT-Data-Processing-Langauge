@@ -8,13 +8,14 @@
 # hlsearch on (H) or off (h):
 ~h
 # Last Search Pattern:
-~MSle0~/SString_t
+~MSle0~/SString_Lit
 
 # Command Line History (newest to oldest):
 :wq
 :sq
 
 # Search String History (newest to oldest):
+?/SString_Lit
 ? \<let\>
 ?/SString_t
 ?/SString
@@ -53,82 +54,69 @@
 # Registers:
 "0	BLOCK	30
 	 A.Call ("printstring", [e]) ->
-""1	BLOCK	60
-	  let s = L.build_global_stringptr e "tmp1" builder in
-	  (* try commenting these two lines and compare the result *)
-	   let zero = L.const_int i32_t 0 in 
-	  let s = L.build_in_bounds_gep s [| zero |] "tmp1" builder i
-"2	LINE	0
+"1	LINE	0
 	  print_string "reached here" in 
-"3	LINE	0
+"2	LINE	0
 	Hello, world!
-"4	LINE	0
+"3	LINE	0
 	 A.Call ("printstring", [e]) ->
-"5	LINE	0
+"4	LINE	0
 	      | String_Lit s -> String_t(s)
-"6	LINE	0
+"5	LINE	0
 	  | FLOAT_LITERAL     { Float_Lit($1) }
-"7	LINE	0
+"6	LINE	0
 	  | STRING_t {String_t} 
-"8	LINE	0
+"7	LINE	0
 	%token <string> ID
+"8	LINE	0
+	| id as lxm    		{ ID(lxm) }
 "9	LINE	0
 	| id as lxm    		{ ID(lxm) }
 "a	CHAR	0
 	1
-"-	CHAR	0
-	(
+""-	CHAR	0
+	t
 
 # File marks:
-'0  3  0  ~/microc-llvm/Makefile
-'1  78  0  ~/microc-llvm/Makefile
-'2  4  27  ~/microc-llvm/tests/test-helloworld.mc
-'3  1  10  ~/microc-llvm/tests/test-helloworld.out
-'4  1  0  ~/microc-llvm/testall.log
-'5  115  44  ~/microc-llvm/codegen.ml
-'6  145  95  ~/microc-llvm/codegen.ml
-'7  57  0  ~/microc-llvm/ast.ml
-'8  92  38  ~/microc-llvm/parser.mly
-'9  66  17  ~/microc-llvm/scanner.mll
+'0  97  18  ~/microc-llvm/codegen.ml
+'1  101  37  ~/microc-llvm/semant.ml
+'2  102  23  ~/microc-llvm/codegen.ml
+'3  101  35  ~/microc-llvm/codegen.ml
+'4  67  25  ~/microc-llvm/ast.ml
+'5  12  0  ~/microc-llvm/codegen.ml
+'6  207  5  ~/microc-llvm/codegen.ml
+'7  101  47  ~/microc-llvm/codegen.ml
+'8  1  16  ~/microc-llvm/tests/test-helloworld.out
+'9  139  57  ~/microc-llvm/codegen.ml
 
 # Jumplist (newest first):
--'  3  0  ~/microc-llvm/Makefile
--'  1  0  ~/microc-llvm/Makefile
--'  78  0  ~/microc-llvm/Makefile
--'  4  27  ~/microc-llvm/tests/test-helloworld.mc
--'  1  0  ~/microc-llvm/tests/test-helloworld.mc
--'  1  10  ~/microc-llvm/tests/test-helloworld.out
--'  1  0  ~/microc-llvm/testall.log
--'  115  44  ~/microc-llvm/codegen.ml
--'  97  1  ~/microc-llvm/codegen.ml
--'  106  0  ~/microc-llvm/codegen.ml
+-'  97  18  ~/microc-llvm/codegen.ml
 -'  1  0  ~/microc-llvm/codegen.ml
--'  145  95  ~/microc-llvm/codegen.ml
--'  57  0  ~/microc-llvm/ast.ml
--'  1  0  ~/microc-llvm/ast.ml
--'  92  38  ~/microc-llvm/parser.mly
--'  1  0  ~/microc-llvm/parser.mly
--'  66  17  ~/microc-llvm/scanner.mll
--'  1  0  ~/microc-llvm/scanner.mll
--'  121  0  ~/microc-llvm/parser.mly
--'  47  0  ~/microc-llvm/codegen.ml
+-'  101  37  ~/microc-llvm/semant.ml
+-'  1  0  ~/microc-llvm/semant.ml
+-'  102  23  ~/microc-llvm/codegen.ml
+-'  101  35  ~/microc-llvm/codegen.ml
 -'  67  25  ~/microc-llvm/ast.ml
+-'  1  0  ~/microc-llvm/ast.ml
 -'  12  0  ~/microc-llvm/codegen.ml
--'  212  5  ~/microc-llvm/codegen.ml
--'  144  57  ~/microc-llvm/codegen.ml
--'  110  54  ~/microc-llvm/codegen.ml
--'  112  0  ~/microc-llvm/codegen.ml
+-'  207  5  ~/microc-llvm/codegen.ml
+-'  1  16  ~/microc-llvm/tests/test-helloworld.out
+-'  139  57  ~/microc-llvm/codegen.ml
+-'  110  0  ~/microc-llvm/codegen.ml
+-'  140  24  ~/microc-llvm/codegen.ml
+-'  105  54  ~/microc-llvm/codegen.ml
+-'  107  0  ~/microc-llvm/codegen.ml
 -'  95  3  ~/microc-llvm/codegen.ml
 -'  48  18  ~/microc-llvm/codegen.ml
 -'  52  36  ~/microc-llvm/codegen.ml
 -'  46  76  ~/microc-llvm/codegen.ml
+-'  4  20  ~/microc-llvm/tests/test-helloworld.mc
+-'  1  0  ~/microc-llvm/tests/test-helloworld.mc
 -'  70  0  ~/microc-llvm/codegen.ml
--'  101  31  ~/microc-llvm/semant.ml
--'  1  0  ~/microc-llvm/semant.ml
 -'  111  14  ~/microc-llvm/semant.ml
 -'  8  0  ~/microc-llvm/semant.ml
 -'  49  1  ~/microc-llvm/codegen.ml
--'  134  47  ~/microc-llvm/codegen.ml
+-'  129  47  ~/microc-llvm/codegen.ml
 -'  23  0  ~/microc-llvm/codegen.ml
 -'  51  2  ~/microc-llvm/codegen.ml
 -'  45  0  ~/microc-llvm/codegen.ml
@@ -138,26 +126,28 @@
 -'  50  54  ~/microc-llvm/codegen.ml
 -'  100  0  ~/microc-llvm/semant.ml
 -'  86  51  ~/microc-llvm/codegen.ml
--'  132  50  ~/microc-llvm/codegen.ml
--'  116  3  ~/microc-llvm/codegen.ml
--'  107  6  ~/microc-llvm/codegen.ml
--'  105  5  ~/microc-llvm/codegen.ml
+-'  127  50  ~/microc-llvm/codegen.ml
+-'  111  3  ~/microc-llvm/codegen.ml
+-'  100  5  ~/microc-llvm/codegen.ml
 -'  36  0  ~/microc-llvm/codegen.ml
 -'  92  37  ~/microc-llvm/codegen.ml
 -'  3  0  ~/microc-llvm/codegen.ml
 -'  2  0  ~/microc-llvm/codegen.ml
 -'  24  4  ~/microc-llvm/codegen.ml
 -'  72  0  ~/microc-llvm/scanner.mll
+-'  1  0  ~/microc-llvm/scanner.mll
 -'  19  0  ~/microc-llvm/codegen.ml
 -'  28  0  ~/microc-llvm/semant.ml
 -'  33  0  ~/microc-llvm/parser.mly
+-'  1  0  ~/microc-llvm/parser.mly
 -'  34  0  ~/microc-llvm/semant.ml
 -'  126  0  ~/microc-llvm/semant.ml
 -'  160  5  ~/microc-llvm/semant.ml
--'  203  11  ~/microc-llvm/codegen.ml
+-'  198  11  ~/microc-llvm/codegen.ml
 -'  99  12  ~/microc-llvm/semant.ml
 -'  47  13  ~/microc-llvm/ast.ml
 -'  16  3  ~/microc-llvm/ast.ml
+-'  92  2  ~/microc-llvm/parser.mly
 -'  86  8  ~/microc-llvm/parser.mly
 -'  91  23  ~/microc-llvm/parser.mly
 -'  10  44  ~/microc-llvm/parser.mly
@@ -174,6 +164,7 @@
 -'  132  27  ~/microc-llvm/semant.ml
 -'  40  0  ~/microc-llvm/semant.ml
 -'  5  0  ~/microc-llvm/testall.log
+-'  1  0  ~/microc-llvm/testall.log
 -'  141  0  ~/microc-llvm/testall.log
 -'  56  54  ~/microc-llvm/semant.ml
 -'  2  0  ~/microc-llvm/semant.ml
@@ -183,15 +174,95 @@
 -'  110  5  ~/microc-llvm/semant.ml
 -'  42  13  ~/microc-llvm/codegen.ml
 -'  62  0  ~/microc-llvm/semant.ml
--'  133  19  ~/microc-llvm/codegen.ml
+-'  128  19  ~/microc-llvm/codegen.ml
 -'  30  19  ~/microc-llvm/codegen.ml
 -'  33  15  ~/microc-llvm/codegen.ml
 -'  94  11  ~/microc-llvm/ast.ml
 -'  100  22  ~/microc-llvm/ast.ml
 -'  102  2  ~/microc-llvm/ast.ml
 -'  103  2  ~/microc-llvm/ast.ml
+-'  107  2  ~/microc-llvm/ast.ml
+-'  108  2  ~/microc-llvm/ast.ml
+-'  74  17  ~/microc-llvm/ast.ml
+-'  8  37  ~/microc-llvm/ast.ml
+-'  60  34  ~/microc-llvm/semant.ml
+-'  52  5  ~/microc-llvm/semant.ml
+-'  49  2  ~/microc-llvm/semant.ml
 
 # History of marks within files (newest to oldest):
+
+> ~/microc-llvm/codegen.ml
+	"	97	18
+	^	101	36
+	.	97	17
+	+	27	51
+	+	33	29
+	+	27	11
+	+	33	20
+	+	27	33
+	+	26	36
+	+	27	35
+	+	26	34
+	+	27	36
+	+	26	37
+	+	27	36
+	+	33	16
+	+	127	51
+	+	100	31
+	+	101	0
+	+	100	55
+	+	127	50
+	+	45	0
+	+	53	58
+	+	50	0
+	+	54	40
+	+	56	78
+	+	129	56
+	+	126	29
+	+	45	0
+	+	45	22
+	+	54	33
+	+	129	3
+	+	50	54
+	+	56	77
+	+	54	9
+	+	56	74
+	+	53	46
+	+	44	70
+	+	54	35
+	+	50	11
+	+	52	14
+	+	53	11
+	+	56	77
+	+	54	55
+	+	56	74
+	+	57	3
+	+	52	4
+	+	55	1
+	+	45	1
+	+	51	2
+	+	129	101
+	+	129	47
+	+	45	0
+	+	49	1
+	+	46	76
+	+	52	38
+	+	48	18
+	+	99	3
+	+	100	35
+	+	105	51
+	+	107	2
+	+	95	4
+	+	107	7
+	+	105	53
+	+	107	0
+	+	105	43
+	+	139	57
+	+	101	47
+	+	101	35
+	+	96	0
+	+	97	17
+	e	46	77
 
 > ~/microc-llvm/Makefile
 	"	3	0
@@ -213,92 +284,6 @@
 
 > ~/microc-llvm/testall.log
 	"	1	0
-
-> ~/microc-llvm/codegen.ml
-	"	115	44
-	^	115	45
-	.	115	44
-	+	27	51
-	+	33	29
-	+	27	11
-	+	33	20
-	+	27	33
-	+	26	36
-	+	27	35
-	+	26	34
-	+	27	36
-	+	26	37
-	+	27	36
-	+	33	16
-	+	133	51
-	+	105	31
-	+	106	0
-	+	105	55
-	+	133	50
-	+	45	0
-	+	53	58
-	+	50	0
-	+	54	40
-	+	56	78
-	+	135	56
-	+	132	29
-	+	45	0
-	+	45	22
-	+	54	33
-	+	135	3
-	+	50	54
-	+	56	77
-	+	54	9
-	+	56	74
-	+	53	46
-	+	44	70
-	+	54	35
-	+	50	11
-	+	52	14
-	+	53	11
-	+	56	77
-	+	54	55
-	+	56	74
-	+	57	3
-	+	52	4
-	+	55	1
-	+	45	1
-	+	51	2
-	+	135	101
-	+	135	47
-	+	45	0
-	+	49	1
-	+	46	76
-	+	52	38
-	+	48	18
-	+	104	3
-	+	105	35
-	+	110	51
-	+	112	2
-	+	95	4
-	+	112	7
-	+	110	53
-	+	112	0
-	+	110	43
-	+	145	57
-	+	106	47
-	+	106	35
-	+	115	38
-	+	95	17
-	+	115	45
-	+	95	14
-	+	115	46
-	+	96	0
-	+	115	39
-	+	145	95
-	+	96	37
-	+	106	0
-	+	103	0
-	+	101	0
-	+	98	0
-	+	101	53
-	+	115	44
-	e	46	77
 
 > ~/microc-llvm/ast.ml
 	"	57	0

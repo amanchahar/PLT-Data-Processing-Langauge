@@ -283,3 +283,114 @@ make
 vim codegen.ml 
 make
 vim codegen.ml 
+ls
+cd microc-llvm/
+ls
+vim ast.ml 
+vim codegen.ml 
+vim ast.ml 
+vim codegen.ml 
+make
+vim codegen.ml 
+make
+vim codegen.ml 
+vim ast.ml 
+ls
+cd microc-llvm/
+ls
+vim codegen.ml 
+make
+vim codegen.ml 
+make
+vim codegen.ml 
+vim semant.ml 
+make
+./testall.sh 
+cat test-helloworld.out
+cat test-helloworld.ll 
+vim codegen.ml 
+make
+./testall.sh 
+cat test-helloworld.lli
+cat test-helloworld.ll
+cat testall.log
+ls
+cat test-helloworld.out
+vim codegen.ml 
+make
+./testall.sh 
+cat test-helloworld.out
+vim tests/test-helloworld.mc
+./testall.sh tests/test-helloworld.mc
+cat test-helloworld.out
+cd microc-llvm
+ls
+cd ..
+ls
+mv microc-llvm bmwsa
+ls
+cd bmwsa/
+make
+ls
+cd ..
+mv bmwsa microc-llvm
+ls
+cd microc-llvm/
+make
+./testall.sh 
+vim tests/test-helloworld.mc 
+vim tests/test-helloworld.out
+vim tests/test-helloworld.mc 
+make
+./testall.sh 
+ls
+cd ..
+ls
+rm microc-llvm.tar.gz 
+ls
+cd microc-llvm/
+ls
+vim Makefile 
+make
+ls
+vim Makefile 
+ls -l
+cd _build/
+l
+ls -l
+cd ..
+ls
+ls -l
+cd ..
+ls
+git init
+git pull https://github.com/amanchahar/PLT-Data-Processing-Langauge.git
+ls
+git add .
+git status
+git commit -m "Hello World" 
+git config --global user.email "amaniiitd@gmail.com"
+git config --global user.name "amanchahar"
+ls
+git commit -m "Hello World" 
+git push 
+ls
+git push
+git push master
+git config --global push.default simple
+git push
+git push master
+git push --set-upstream master master
+git 
+git status
+git add .
+git status
+ls
+git pull https://github.com/amanchahar/PLT-Data-Processing-Langauge.git
+git status
+git add microc-llvm/
+ls
+git status
+git commit -m "Hello World"
+git push HEAD
+git push --set-upstream HEAD master
