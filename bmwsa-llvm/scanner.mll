@@ -26,6 +26,7 @@ let return = '\n'
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
+| "//"     { comment2 lexbuf }		(* Comments *)
 | "/*"     { comment lexbuf }           (* Comments *)
 | '('      { LPAREN }
 | ')'      { RPAREN }
@@ -66,6 +67,8 @@ rule token = parse
 | string       		{ STRING_LITERAL(unescape s) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
+and comment2= parse "\n"{token lexbuf}
+| _ { comment2 lexbuf}
 
 and comment = parse
   "*/" { token lexbuf }
