@@ -1,0 +1,9 @@
+
+int main()
+{
+  /*comments
+  print(foo(7));
+  */
+  print(8);
+  return 0;
+}
