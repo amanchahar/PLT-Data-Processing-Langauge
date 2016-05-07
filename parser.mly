@@ -4,10 +4,10 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA RBRACKET LBRACKET
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL VOID STRING
+%token RETURN IF ELSE FOR WHILE INT BOOL VOID STRING CHAR FLOAT
 %token <int> LITERAL
 %token <float> FLOAT_LITERAL
 %token <string> STRING_LITERAL
@@ -59,7 +59,21 @@ typ:
     INT { Int }
   | BOOL { Bool }
   | VOID { Void }
+  | CHAR {Char}
+  | FLOAT {Float }
   | STRING { String_t }
+
+array_t: 
+  typ ID LBRACKET brackets RBRACKET {    L($1,$2,Arraytype($1,$4)) }
+
+dtype:
+   typ {  Dtype($1)  }
+  
+
+
+brackets:
+   { 1 }
+   | brackets RBRACKET LBRACKET {$1 + 1}
 
 vdecl_list:
     /* nothing */    { [] }
@@ -91,6 +105,7 @@ expr:
     LITERAL          { Literal($1) }
   | STRING_LITERAL   { String_Lit($1) }
   | CHAR_LITERAL     { Char_Lit($1) } 
+  | FLOAT_LITERAL {Float_Lit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }

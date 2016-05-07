@@ -23,14 +23,17 @@ let translate (globals, functions) =
   and i32_t  = L.i32_type  context
   and i8_t   = L.i8_type   context
   and i1_t   = L.i1_type   context
+  and f_t = L.double_type context
   and void_t = L.void_type context in 
-  let  str_t = L.pointer_type i8_t 
+  let str_t = L.pointer_type i8_t 
   and void_ptr=L.pointer_type i32_t in
 
   let ltype_of_typ = function
       A.Int -> i32_t
     | A.Bool -> i1_t
     | A.Void -> void_t
+    | A.Float -> f_t
+    | A.Char -> i8_t
     | A.String_t -> str_t in
 
   (* Declare each global variable; remember its value in a map *)
@@ -43,7 +46,8 @@ let translate (globals, functions) =
   (* Declare printf(), which the print built-in function will call *)
   let printf_t = (L.var_arg_function_type i32_t [| L.pointer_type i8_t |])
   and fopen_t=(L.function_type str_t [|str_t;str_t|]) 
-  and fputs_t=(L.function_type str_t [|str_t;str_t|]) in
+  and fputs_t=(L.function_type str_t [|str_t;str_t|]) 
+in
   let printf_func = L.declare_function "printf" printf_t the_module 
   and fopen_fun=L.declare_function "fopen" fopen_t the_module
   and fputs_fun=L.declare_function "fputs" fputs_t the_module
@@ -76,8 +80,10 @@ let  function_decls =
 
 
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt2" builder in  
+    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder and
+    str_format_str = L.build_global_stringptr "%s\n" "fmt2" builder and
+    chr_format_str = L.build_global_stringptr "%c\n" "fmt3" builder
+in  
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -104,7 +110,7 @@ and codegen_string_build e builder =
   let s = L.build_global_stringptr e "tmp1" builder in
   (* try commenting these two lines and compare the result *)
 
-   let zero = L.const_int i32_t 1 in 
+   let zero = L.const_int i32_t 0 in 
    L.build_in_bounds_gep s [| zero |] "temp1" builder  
  in
 (*
@@ -118,6 +124,8 @@ and  codegen_print e builder =
 *)
 let rec expr builder = function
 	A.Literal i -> L.const_int i32_t i
+  | A.Char_Lit c -> L.const_int i8_t (Char.code c)
+  | A.Float_Lit f -> L.const_float f_t f 
      | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
      | A.String_Lit s -> codegen_string_build s builder 
       | A.Noexpr -> L.const_int i32_t 0
@@ -125,11 +133,13 @@ let rec expr builder = function
       | A.Binop (e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in
+    let tp1=(L.type_of (L.const_int i32_t 3)) and tp2=(L.type_of (L.const_float f_t 3.2)) 
+and tp3=(L.type_of e1') in
 	  (match op with
-	    A.Add     -> L.build_add
-	  | A.Sub     -> L.build_sub
-	  | A.Mult    -> L.build_mul
-          | A.Div     -> L.build_sdiv
+	    A.Add     -> (if tp1=tp3 then (L.build_add) else (L.build_fadd))
+	  | A.Sub     -> (if tp1=tp3 then (L.build_sub) else (L.build_fsub))
+	  | A.Mult    -> (if tp1=tp3 then (L.build_mul) else (L.build_fmul))
+    | A.Div     -> (if tp1=tp3 then (L.build_sdiv) else (L.build_fdiv))
 	  | A.And     -> L.build_and
 	  | A.Or      -> L.build_or
 	  | A.Equal   -> L.build_icmp L.Icmp.Eq
@@ -149,8 +159,17 @@ let rec expr builder = function
       | A.Call ("print", [e])  ->
       L.build_call printf_func [| int_format_str ;  (expr builder e) |]
 	    "printf" builder
-  | A.Call ("printstring", [e]) -> L.build_call printf_func [| str_format_str ; (expr builder e) |] "tmp1" builder 
-  | A.Call ("fopen", [e]) -> raise(Failure "ss");L.build_call printf_func [| str_format_str ; (expr builder e) |] "tmp2" builder 
+      | A.Call ("printstring", [e]) -> (*L.build_call printf_func [| str_format_str ; (expr builder e) |] "tmp1" builder *)
+      let cnt=expr builder e in
+      let para = str_format_str  in
+      let actuals=[|para;(expr builder e)|] in
+      L.build_call printf_func actuals "tmp1" builder 
+
+
+      | A.Call ("fopen", e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+	L.build_call fopen_fun (Array.of_list actuals) "tmp2" builder 
+      | A.Call ("fputs",e) ->let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+	L.build_call fputs_fun (Array.of_list actuals) "tmp3" builder 
      | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let actuals = List.rev (List.map (expr builder) (List.rev act)) in

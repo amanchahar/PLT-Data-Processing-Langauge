@@ -48,7 +48,9 @@ let check (globals, functions) =
 
   (* Function declaration for a named function *)
   let built_in_decls =  
-StringMap.add "fopen" { typ = String_t; fname = "fopen"; formals = [(String_t,"x");(String_t,"x")];
+StringMap.add "fputs" { typ = String_t; fname = "fputs"; formals = [(String_t,"x");(String_t,"x")];
+       locals = []; body = [] } 
+(StringMap.add "fopen" { typ = String_t; fname = "fopen"; formals = [(String_t,"x");(String_t,"x")];
        locals = []; body = [] } 
 (
      StringMap.add "print"
@@ -57,7 +59,7 @@ StringMap.add "fopen" { typ = String_t; fname = "fopen"; formals = [(String_t,"x
       (StringMap.singleton "printstring"
      {
 	typ = Void; fname= "printstring"; formals = [(String_t, "x")];
-	locals =[]; body=[] }))
+	locals =[]; body=[] })))
       (*(StringMap.singleton "printb" 
      { typ = Void; fname = "printb"; formals = [(Bool, "x")];
        locals = []; body = [] }) *)
@@ -102,10 +104,12 @@ StringMap.add "fopen" { typ = String_t; fname = "fopen"; formals = [(String_t,"x
 	Literal _ -> Int
       | BoolLit _ -> Bool
       | String_Lit s -> String_t
+      | Float_Lit _ -> Float
+      | Char_Lit _ -> Char
       | Id s -> type_of_identifier s
       | Binop(e1, op, e2) as e -> let t1 = expr e1 and t2 = expr e2 in
 	(match op with
-          Add | Sub | Mult | Div when t1 = Int && t2 = Int -> Int
+          Add | Sub | Mult | Div ->(match(t1,t2) with (Int,Int)->Int|(Float,Float)->Float|_->raise(Failure "s"))
 	| Equal | Neq when t1 = t2 -> Bool
 	| Less | Leq | Greater | Geq when t1 = Int && t2 = Int -> Bool
 	| And | Or when t1 = Bool && t2 = Bool -> Bool
