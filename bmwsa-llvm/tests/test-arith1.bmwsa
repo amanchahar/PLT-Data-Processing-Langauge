@@ -1,5 +1,5 @@
 int main()
 {
-  print(39 + 3);
+  print(39 + 3 - 39 + 2 );
   return 0;
 }

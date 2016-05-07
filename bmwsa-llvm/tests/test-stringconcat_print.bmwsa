@@ -1,0 +1,5 @@
+int main()
+{
+printstring("Segmentation " + "Fault\n");
+return 0;
+}

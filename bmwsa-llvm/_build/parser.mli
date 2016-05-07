@@ -5,6 +5,8 @@ type token =
   | LBRACE
   | RBRACE
   | COMMA
+  | RBRACKET
+  | LBRACKET
   | PLUS
   | MINUS
   | TIMES
@@ -29,6 +31,8 @@ type token =
   | INT
   | BOOL
   | VOID
+  | FLOAT
+  | CHAR
   | LITERAL of (int)
   | FLOAT_LITERAL of (float)
   | STRING_LITERAL of (string)

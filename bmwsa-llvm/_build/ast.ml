@@ -5,7 +5,9 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String_t
+type typ = Int | Bool | Void | Char | Float | String_t
+
+type dtype = Arraytype of typ * int | Dtype of typ
 
 type bind = typ * string
 
@@ -20,6 +22,7 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
+  | L of typ * string * dtype
   | Noexpr
 
 type stmt =
@@ -66,6 +69,8 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | String_Lit(s) -> "" ^ s 
   | Id(s) -> s
+  | Float_Lit(s) -> string_of_float s
+  (*| Char_Lit(s) -> s*)
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
@@ -92,6 +97,7 @@ let string_of_typ = function
   | Bool -> "bool"
   | Void -> "void"
   | String_t -> "string"
+  | Float -> "float"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

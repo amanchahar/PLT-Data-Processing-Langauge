@@ -99,10 +99,13 @@ let check (globals, functions) =
 	Literal _ -> Int
       | BoolLit _ -> Bool
       | String_Lit s -> String_t
+      | Float_Lit _ -> Float
+      | Char_Lit _ -> Char
       | Id s -> type_of_identifier s
       | Binop(e1, op, e2) as e -> let t1 = expr e1 and t2 = expr e2 in
 	(match op with
-          Add | Sub | Mult | Div when t1 = Int && t2 = Int -> Int
+         Add when t1 = String_t && t2 = String_t -> String_t 
+        | Add | Sub | Mult | Div when t1 = Int && t2 = Int -> Int
 	| Equal | Neq when t1 = t2 -> Bool
 	| Less | Leq | Greater | Geq when t1 = Int && t2 = Int -> Bool
 	| And | Or when t1 = Bool && t2 = Bool -> Bool

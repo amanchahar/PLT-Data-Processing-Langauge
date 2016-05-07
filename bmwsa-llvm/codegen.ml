@@ -22,7 +22,9 @@ let translate (globals, functions) =
   let the_module = L.create_module context "MicroC"
   and i32_t  = L.i32_type  context
   and i8_t   = L.i8_type   context
+  and f_t   =  L.double_type context
   and i1_t   = L.i1_type   context
+  (* and str_typ = Arraytype(Char,1)  *)
   and void_t = L.void_type context in 
   let  str_t = L.pointer_type i8_t in
 
@@ -30,6 +32,7 @@ let translate (globals, functions) =
       A.Int -> i32_t
     | A.Bool -> i1_t
     | A.Void -> void_t
+    | A.Float -> f_t
     | A.String_t -> str_t in
 
   (* Declare each global variable; remember its value in a map *)
@@ -109,10 +112,23 @@ and  codegen_print e builder =
   let s = L.build_in_bounds_gep s [| zero |] "tmp1" builder in
     L.build_call printf_func [| s |] "printf" builder in  
 
+(* let rec string_expr builder = function 
+
+ A.String_Lit s -> s 
+ | A.Binop (e1, op, e2) ->
+     let e1' = string_expr builder e1
+     and e2' = string_expr builder e2 in
+     let str_concat =  e1' ^ e2'     
+ in 
+    codegen_string_build str_concat builder
+in *) 
+
 let rec expr builder = function
 	A.Literal i -> L.const_int i32_t i
      | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
      | A.String_Lit s -> codegen_string_build s builder 
+     | A.Float_Lit f -> L.const_float f_t f 
+     | A.Char_Lit c -> L.const_int i8_t (Char.code c)
       | A.Noexpr -> L.const_int i32_t 0
       | A.Id s -> L.build_load (lookup s) s builder
       | A.Binop (e1, op, e2) ->

@@ -30,6 +30,12 @@ lli test-fib.ll > test-fib.out
 diff -b test-fib.out tests/test-fib.out > test-fib.diff
 ###### SUCCESS
 
+###### Testing test-float1
+./microc.native < tests/test-float1.bmwsa > test-float1.ll
+lli test-float1.ll > test-float1.out
+diff -b test-float1.out tests/test-float1.out > test-float1.diff
+###### SUCCESS
+
 ###### Testing test-for1
 ./microc.native < tests/test-for1.bmwsa > test-for1.ll
 lli test-for1.ll > test-for1.out
@@ -184,6 +190,14 @@ Fatal error: exception Failure("unrecognized function printb")
 Fatal error: exception Failure("unrecognized function printb")
 ###### FAILED
 
+###### Testing test-stringconcat_print
+./microc.native < tests/test-stringconcat_print.bmwsa > test-stringconcat_print.ll
+lli test-stringconcat_print.ll > test-stringconcat_print.out
+lli: test-stringconcat_print.ll:12:104: error: constexpr requires integer operands
+  %tmp1 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @fmt2, i32 0, i32 0), i8* add (i8* getelementptr inbounds ([14 x i8]* @tmp1, i32 0, i32 0), i8* getelementptr inbounds ([7 x i8]* @tmp11, i32 0, i32 0)))
+                                                                                                       ^
+###### FAILED
+
 ###### Testing test-var1
 ./microc.native < tests/test-var1.bmwsa > test-var1.ll
 lli test-var1.ll > test-var1.out
@@ -242,6 +256,11 @@ diff -b fail-expr1.err tests/fail-expr1.err > fail-expr1.diff
 ###### Testing fail-expr2
 ./microc.native < tests/fail-expr2.bmwsa 2> fail-expr2.err >> testall.log
 diff -b fail-expr2.err tests/fail-expr2.err > fail-expr2.diff
+###### SUCCESS
+
+###### Testing fail-floatassign1
+./microc.native < tests/fail-floatassign1.bmwsa 2> fail-floatassign1.err >> testall.log
+diff -b fail-floatassign1.err tests/fail-floatassign1.err > fail-floatassign1.diff
 ###### SUCCESS
 
 ###### Testing fail-for1

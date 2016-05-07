@@ -4,10 +4,10 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA RBRACKET LBRACKET
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL VOID
+%token RETURN IF ELSE FOR WHILE INT BOOL VOID FLOAT CHAR
 %token <int> LITERAL
 %token <float> FLOAT_LITERAL
 %token <string> STRING_LITERAL
@@ -59,7 +59,23 @@ typ:
     INT { Int }
   | BOOL { Bool }
   | VOID { Void }
+  | FLOAT { Float }
+  |	CHAR { Char }
   
+
+
+array_t: 
+	typ ID LBRACKET brackets RBRACKET {    L($1,$2,Arraytype($1,$4)) }
+
+dtype:
+	 typ {  Dtype($1)  }
+	
+
+
+brackets:
+	 { 1 }
+	 | brackets RBRACKET LBRACKET {$1 + 1}
+
 
 vdecl_list:
     /* nothing */    { [] }
@@ -82,6 +98,8 @@ stmt:
   | FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
      { For($3, $5, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
+   
+  
 
 expr_opt:
     /* nothing */ { Noexpr }
@@ -91,6 +109,7 @@ expr:
     LITERAL          { Literal($1) }
   | STRING_LITERAL   { String_Lit($1) }
   | CHAR_LITERAL     { Char_Lit($1) } 
+  | FLOAT_LITERAL     {Float_Lit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
@@ -111,6 +130,7 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+  
 
 actuals_opt:
     /* nothing */ { [] }
