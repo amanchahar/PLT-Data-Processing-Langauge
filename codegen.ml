@@ -171,8 +171,12 @@ and tp3=(L.type_of e1') in
       let actuals=[|para;(expr builder e)|] in
       L.build_call printf_func actuals "tmp1" builder 
 
+      | A.Call ("size",[e]) -> let cnt=expr builder e in 
+      let cnt2=(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder) in
+      L.build_call ftell_fun [|cnt2|] "tmp7" builder
+
       | A.Call ("fff", [e;f]) -> let cnt=expr builder e and cnt2=expr builder f in
-  L.build_call fputs_fun [|cnt2;(L.build_call fopen_fun [|cnt;read_str|] "tmp2" builder)|] "tmp5" builder
+  L.build_call fputs_fun [|cnt2;(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder)|] "tmp5" builder
 
       | A.Call ("fopen", e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
 	L.build_call fopen_fun (Array.of_list actuals) "tmp2" builder 
