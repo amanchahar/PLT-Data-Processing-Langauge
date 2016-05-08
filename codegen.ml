@@ -20,6 +20,7 @@ module StringMap = Map.Make(String)
 let translate (globals, functions) =
   let context = L.global_context () in
   let the_module = L.create_module context "MicroC"
+  and i64_t  = L.i64_type  context
   and i32_t  = L.i32_type  context
   and i8_t   = L.i8_type   context
   and i1_t   = L.i1_type   context
@@ -47,10 +48,14 @@ let translate (globals, functions) =
   let printf_t = (L.var_arg_function_type i32_t [| L.pointer_type i8_t |])
   and fopen_t=(L.function_type str_t [|str_t;str_t|]) 
   and fputs_t=(L.function_type str_t [|str_t;str_t|]) 
+  and fseek_t=(L.function_type str_t [|str_t;i64_t;i32_t|])
+  and ftell_t=(L.function_type i64_t [|str_t|])
 in
   let printf_func = L.declare_function "printf" printf_t the_module 
   and fopen_fun=L.declare_function "fopen" fopen_t the_module
   and fputs_fun=L.declare_function "fputs" fputs_t the_module
+  and fseek_fun=L.declare_function "fseek" fseek_t the_module
+  and ftell_fun=L.declare_function "ftell" ftell_t the_module
 in 
 
 
@@ -82,7 +87,8 @@ let  function_decls =
 
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder and
     str_format_str = L.build_global_stringptr "%s\n" "fmt2" builder and
-    chr_format_str = L.build_global_stringptr "%c\n" "fmt3" builder
+    chr_format_str = L.build_global_stringptr "%c\n" "fmt3" builder and
+    read_str= L.build_global_stringptr "a" "fmt4" builder
 in  
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -156,15 +162,17 @@ and tp3=(L.type_of e1') in
           | A.Not     -> L.build_not) e' "tmp" builder
       | A.Assign (s, e) -> let e' = expr builder e in
 	                   ignore (L.build_store e' (lookup s) builder); e'
-      | A.Call ("print", [e])  ->
-      L.build_call printf_func [| int_format_str ;  (expr builder e) |]
-	    "printf" builder
+      | A.Call ("print", e)  ->
+      let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+  L.build_call printf_func (Array.of_list actuals) "tmp1" builder 
       | A.Call ("printstring", [e]) -> (*L.build_call printf_func [| str_format_str ; (expr builder e) |] "tmp1" builder *)
       let cnt=expr builder e in
       let para = str_format_str  in
       let actuals=[|para;(expr builder e)|] in
       L.build_call printf_func actuals "tmp1" builder 
 
+      | A.Call ("fff", [e;f]) -> let cnt=expr builder e and cnt2=expr builder f in
+  L.build_call fputs_fun [|cnt2;(L.build_call fopen_fun [|cnt;read_str|] "tmp2" builder)|] "tmp5" builder
 
       | A.Call ("fopen", e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
 	L.build_call fopen_fun (Array.of_list actuals) "tmp2" builder 
