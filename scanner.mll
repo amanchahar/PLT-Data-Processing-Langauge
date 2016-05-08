@@ -41,6 +41,8 @@ rule token = parse
 | '='      { ASSIGN }
 | '['		{ LBRACKET} 
 | ']'		{RBRACKET}
+| "++"      {SPLUS}
+| "--"		{SMINUS}
 | "=="     { EQ }
 | "!="     { NEQ }
 | '<'      { LT }
@@ -57,6 +59,7 @@ rule token = parse
 | "return" { RETURN }
 | "int"    { INT }
 | "string" { STRING }
+| "file"   {STRING }
 | "char"	{ CHAR }
 | "bool"   { BOOL }
 | "void"   { VOID }
