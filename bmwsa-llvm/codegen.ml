@@ -20,19 +20,24 @@ module StringMap = Map.Make(String)
 let translate (globals, functions) =
   let context = L.global_context () in
   let the_module = L.create_module context "MicroC"
+  and i64_t  = L.i64_type  context
   and i32_t  = L.i32_type  context
   and i8_t   = L.i8_type   context
   and f_t   =  L.double_type context
   and i1_t   = L.i1_type   context
   (* and str_typ = Arraytype(Char,1)  *)
   and void_t = L.void_type context in 
-  let  str_t = L.pointer_type i8_t in
+  let str_t = L.pointer_type i8_t 
+  and void_ptr=L.pointer_type i32_t in 
+ 
 
   let ltype_of_typ = function
       A.Int -> i32_t
     | A.Bool -> i1_t
     | A.Void -> void_t
     | A.Float -> f_t
+    | A.Char -> i8_t
+
     | A.String_t -> str_t in
 
   (* Declare each global variable; remember its value in a map *)
@@ -43,17 +48,20 @@ let translate (globals, functions) =
     List.fold_left global_var StringMap.empty globals in
 
   (* Declare printf(), which the print built-in function will call *)
-  let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
-  let printf_func = L.declare_function "printf" printf_t the_module in 
-
-
-
-
-
-
-
-
-
+  let printf_t = (L.var_arg_function_type i32_t [| L.pointer_type i8_t |])
+  and fopen_t=(L.function_type str_t [|str_t;str_t|]) 
+  and fputs_t=(L.function_type str_t [|str_t;str_t|]) 
+  and fseek_t=(L.function_type str_t [|str_t;i64_t;i32_t|])
+  and ftell_t=(L.function_type i64_t [|str_t|])
+  and fgetc_t=(L.function_type i8_t [|str_t|])
+in
+  let printf_func = L.declare_function "printf" printf_t the_module 
+  and fgetc_fun=L.declare_function "fgetc" fgetc_t the_module
+  and fopen_fun=L.declare_function "fopen" fopen_t the_module
+  and fputs_fun=L.declare_function "fputs" fputs_t the_module
+  and fseek_fun=L.declare_function "fseek" fseek_t the_module
+  and ftell_fun=L.declare_function "ftell" ftell_t the_module
+in 
 
 
   (* Define each function (arguments and return type) so we can call it *)
@@ -74,7 +82,9 @@ let  function_decls =
 
 
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt2" builder in  
+    let str_format_str = L.build_global_stringptr "%s\n" "fmt2" builder in
+    let chr_format_str = L.build_global_stringptr "%c\n" "fmt3" builder in
+    let read_str= L.build_global_stringptr "a" "fmt4" builder  in
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -134,11 +144,13 @@ let rec expr builder = function
       | A.Binop (e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in
+    let tp1=(L.type_of (L.const_int i32_t 3)) and tp2=(L.type_of (L.const_float f_t 3.2)) 
+and tp3=(L.type_of e1') in
 	  (match op with
-	    A.Add     -> L.build_add
-	  | A.Sub     -> L.build_sub
-	  | A.Mult    -> L.build_mul
-          | A.Div     -> L.build_sdiv
+	    A.Add     -> (if tp1=tp3 then (L.build_add) else (L.build_fadd))
+	  | A.Sub     -> (if tp1=tp3 then (L.build_sub) else (L.build_fsub))
+	  | A.Mult    -> (if tp1=tp3 then (L.build_mul) else (L.build_fmul))
+    | A.Div     -> (if tp1=tp3 then (L.build_sdiv) else (L.build_fdiv))
 	  | A.And     -> L.build_and
 	  | A.Or      -> L.build_or
 	  | A.Equal   -> L.build_icmp L.Icmp.Eq
@@ -155,10 +167,28 @@ let rec expr builder = function
           | A.Not     -> L.build_not) e' "tmp" builder
       | A.Assign (s, e) -> let e' = expr builder e in
 	                   ignore (L.build_store e' (lookup s) builder); e'
-      | A.Call ("print", [e])  ->
+| A.Call ("print", [e])  ->
       L.build_call printf_func [| int_format_str ;  (expr builder e) |]
-	    "printf" builder
+      "printf" builder
   | A.Call ("printstring", [e]) -> L.build_call printf_func [| str_format_str ; (expr builder e) |] "tmp1" builder 
+  
+| A.Call ("printx", e)  ->
+      let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+  L.build_call printf_func (Array.of_list actuals) "tmp1" builder 
+
+      | A.Call ("size",[e]) -> let cnt=expr builder e in 
+      let cnt2=(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder) in
+      L.build_call ftell_fun [|cnt2|] "tmp7" builder
+      | A.Call ("fgetc",[e]) -> let cnt=expr builder e in
+  L.build_call fgetc_fun [|cnt|] "temp1" builder
+
+      | A.Call ("fff", [e;f]) -> let cnt=expr builder e and cnt2=expr builder f in
+  L.build_call fputs_fun [|cnt2;(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder)|] "tmp5" builder
+
+      | A.Call ("fopen", e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+  L.build_call fopen_fun (Array.of_list actuals) "tmp2" builder 
+      | A.Call ("fputs",e) ->let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+  L.build_call fputs_fun (Array.of_list actuals) "tmp3" builder 
      | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let actuals = List.rev (List.map (expr builder) (List.rev act)) in

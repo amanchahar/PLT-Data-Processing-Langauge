@@ -70,7 +70,7 @@ let rec string_of_expr = function
   | String_Lit(s) -> "" ^ s 
   | Id(s) -> s
   | Float_Lit(s) -> string_of_float s
-  (*| Char_Lit(s) -> s*)
+  | Char_Lit(s) -> Char.escaped s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e

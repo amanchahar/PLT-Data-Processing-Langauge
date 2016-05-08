@@ -29,6 +29,7 @@ let translate (globals, functions) =
   let str_t = L.pointer_type i8_t 
   and void_ptr=L.pointer_type i32_t in
 
+
   let ltype_of_typ = function
       A.Int -> i32_t
     | A.Bool -> i1_t

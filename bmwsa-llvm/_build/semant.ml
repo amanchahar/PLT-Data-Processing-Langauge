@@ -47,14 +47,21 @@ let check (globals, functions) =
     (List.map (fun fd -> fd.fname) functions);
 
   (* Function declaration for a named function *)
+
   let built_in_decls =  
+
+  StringMap.add "fputs" { typ = String_t; fname = "fputs"; formals = [(String_t,"x");(String_t,"x")];
+       locals = []; body = [] } 
+(StringMap.add "fopen" { typ = String_t; fname = "fopen"; formals = [(String_t,"x");(String_t,"x")];
+       locals = []; body = [] } 
+(
      StringMap.add "print"
      { typ = Void; fname = "print"; formals = [(Int, "x")];
        locals = []; body = [] } 	
       (StringMap.singleton "printstring"
      {
 	typ = Void; fname= "printstring"; formals = [(String_t, "x")];
-	locals =[]; body=[] })
+	locals =[]; body=[] })))
       (*(StringMap.singleton "printb" 
      { typ = Void; fname = "printb"; formals = [(Bool, "x")];
        locals = []; body = [] }) *)
@@ -103,17 +110,28 @@ let check (globals, functions) =
       | Char_Lit _ -> Char
       | Id s -> type_of_identifier s
       | Binop(e1, op, e2) as e -> let t1 = expr e1 and t2 = expr e2 in
-	(match op with
-         Add when t1 = String_t && t2 = String_t -> String_t 
-        | Add | Sub | Mult | Div when t1 = Int && t2 = Int -> Int
-	| Equal | Neq when t1 = t2 -> Bool
-	| Less | Leq | Greater | Geq when t1 = Int && t2 = Int -> Bool
-	| And | Or when t1 = Bool && t2 = Bool -> Bool
-        | _ -> raise (Failure ("illegal binary operator " ^
+	
+        
+        (match op with
+         Add | Sub -> (match(t1,t2) with (Int,Int) -> Int | (Float,Float) -> Float | (Float,Int) -> Float | (Int,Float) -> Float | (String_t,String_t) -> String_t | _->raise (Failure ("illegal binary operator " ^
+              string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
+              string_of_typ t2 ^ " in " ^ string_of_expr e)) )
+         
+          | Mult | Div -> (match(t1,t2) with (Int,Int)->Int|(Float,Float)->Float|_-> raise (Failure ("illegal binary operator " ^
+              string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
+              string_of_typ t2 ^ " in " ^ string_of_expr e)) )
+          | Equal | Neq when t1 = t2 -> Bool
+	        | Less | Leq | Greater | Geq when t1 = Int && t2 = Int -> Bool
+	        | And | Or when t1 = Bool && t2 = Bool -> Bool
+          | _ -> raise (Failure ("illegal binary operator " ^
               string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
               string_of_typ t2 ^ " in " ^ string_of_expr e))
         )
-      | Unop(op, e) as ex -> let t = expr e in
+
+
+
+    | Unop(op, e) as ex -> let t = expr e in
+
 	 (match op with
 	   Neg when t = Int -> Int
 	 | Not when t = Bool -> Bool
@@ -126,7 +144,9 @@ let check (globals, functions) =
 				     " = " ^ string_of_typ rt ^ " in " ^ 
 				     string_of_expr ex))
       | Call(fname, actuals) as call -> let fd = function_decl fname in
-         if List.length actuals != List.length fd.formals then
+         if fname<>"print" then 
+
+         ( if List.length actuals != List.length fd.formals then
            raise (Failure ("expecting " ^ string_of_int
              (List.length fd.formals) ^ " arguments in " ^ string_of_expr call))
          else
@@ -134,7 +154,7 @@ let check (globals, functions) =
               ignore (check_assign ft et
                 (Failure ("illegal actual argument found " ^ string_of_typ et ^
                 " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e))))
-             fd.formals actuals;
+             fd.formals actuals) else ();
            fd.typ
     in
 

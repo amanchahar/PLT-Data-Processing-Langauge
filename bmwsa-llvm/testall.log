@@ -24,6 +24,18 @@ lli test-arith3.ll > test-arith3.out
 diff -b test-arith3.out tests/test-arith3.out > test-arith3.diff
 ###### SUCCESS
 
+###### Testing test-comments
+./microc.native < tests/test-comments.bmwsa > test-comments.ll
+lli test-comments.ll > test-comments.out
+diff -b test-comments.out tests/test-comments.out > test-comments.diff
+###### SUCCESS
+
+###### Testing test-comments2
+./microc.native < tests/test-comments2.bmwsa > test-comments2.ll
+lli test-comments2.ll > test-comments2.out
+diff -b test-comments2.out tests/test-comments2.out > test-comments2.diff
+###### SUCCESS
+
 ###### Testing test-fib
 ./microc.native < tests/test-fib.bmwsa > test-fib.ll
 lli test-fib.ll > test-fib.out
@@ -187,14 +199,14 @@ Fatal error: exception Failure("unrecognized function printb")
 
 ###### Testing test-ops2
 ./microc.native < tests/test-ops2.bmwsa > test-ops2.ll
-Fatal error: exception Failure("unrecognized function printb")
+Fatal error: exception Parsing.Parse_error
 ###### FAILED
 
 ###### Testing test-stringconcat_print
 ./microc.native < tests/test-stringconcat_print.bmwsa > test-stringconcat_print.ll
 lli test-stringconcat_print.ll > test-stringconcat_print.out
-lli: test-stringconcat_print.ll:12:104: error: constexpr requires integer operands
-  %tmp1 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @fmt2, i32 0, i32 0), i8* add (i8* getelementptr inbounds ([14 x i8]* @tmp1, i32 0, i32 0), i8* getelementptr inbounds ([7 x i8]* @tmp11, i32 0, i32 0)))
+lli: test-stringconcat_print.ll:24:104: error: constexpr requires fp operands
+  %tmp1 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @fmt2, i32 0, i32 0), i8* fadd (i8* getelementptr inbounds ([14 x i8]* @tmp1, i32 0, i32 0), i8* getelementptr inbounds ([7 x i8]* @tmp11, i32 0, i32 0)))
                                                                                                        ^
 ###### FAILED
 

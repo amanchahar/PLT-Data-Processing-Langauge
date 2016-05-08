@@ -109,6 +109,7 @@ StringMap.add "fputs" { typ = String_t; fname = "fputs"; formals = [(String_t,"x
       | Id s -> type_of_identifier s
       | Binop(e1, op, e2) as e -> let t1 = expr e1 and t2 = expr e2 in
 	(match op with
+          Add when t1 = String_t && t2 = String_t -> String_t 
           Add | Sub | Mult | Div ->(match(t1,t2) with (Int,Int)->Int|(Float,Float)->Float|_->raise(Failure "s"))
 	| Equal | Neq when t1 = t2 -> Bool
 	| Less | Leq | Greater | Geq when t1 = Int && t2 = Int -> Bool

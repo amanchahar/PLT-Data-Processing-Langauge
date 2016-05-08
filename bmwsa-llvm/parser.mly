@@ -5,9 +5,9 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA RBRACKET LBRACKET
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT
+%token PLUS MINUS TIMES DIVIDE ASSIGN NOT SPLUS SMINUS
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL VOID FLOAT CHAR
+%token RETURN IF ELSE FOR WHILE INT BOOL VOID FLOAT CHAR STRING
 %token <int> LITERAL
 %token <float> FLOAT_LITERAL
 %token <string> STRING_LITERAL
@@ -61,6 +61,7 @@ typ:
   | VOID { Void }
   | FLOAT { Float }
   |	CHAR { Char }
+  | STRING {String_t}
   
 
 
@@ -113,6 +114,10 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | ID SPLUS         { Binop(Assign($1,Binop(Ast.Id($1), Add, Ast.Literal(1))),Sub,Ast.Literal(1))}
+  | ID SMINUS        { Binop(Assign($1,Binop(Ast.Id($1), Sub, Ast.Literal(1))),Add,Ast.Literal(1))}
+  | SMINUS ID        { Assign($2,Binop(Ast.Id($2), Sub, Ast.Literal(1)))}
+  | SPLUS ID         { Assign($2,Binop(Ast.Id($2), Add, Ast.Literal(1)))}
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }

@@ -13,6 +13,8 @@ type token =
   | DIVIDE
   | ASSIGN
   | NOT
+  | SPLUS
+  | SMINUS
   | EQ
   | NEQ
   | LT
@@ -33,6 +35,7 @@ type token =
   | VOID
   | FLOAT
   | CHAR
+  | STRING
   | LITERAL of (int)
   | FLOAT_LITERAL of (float)
   | STRING_LITERAL of (string)
