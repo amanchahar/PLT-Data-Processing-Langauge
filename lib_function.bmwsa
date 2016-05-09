@@ -2,44 +2,78 @@
 int countline(string path){
 	int count;
 	char c;
-	bool flag;
 	file f;
 
 	
-	flag=false;
-	count=0;
+	
+	count=1;
 	f=fopen(path,"r");
 
 	
-	while(!flag){
-	flag=feof(f);
+	while(!feof(f)){
 	c=fgetc(f);
 	if(c=='\n') count++;
 	}
-	
 	return count;
 }
 
-int copyfile(string path1, string path2){
+
+
+void mergefile(string object, string path1, string path2){
+	
+	copyfile(path1,object);
+	
+	fputs("\n",fopen(object,"a"));
+
+	copyfile(path2,object);
+
+}
+
+
+
+void copyfile(string path1, string path2){
+	//from path1 to path 2
 	file f_ori;
 	file f_new;
-	bool flag;
 	char c;
 	string s;
 
-	flag=false;
+	
 	f_ori=fopen(path1,"r");
 	f_new=fopen(path2,"a");
-
-	while(!flag){
-	flag=feof(f_ori);
+	while(!feof(f_ori)){
 	c=fgetc(f_ori);
-
-	fputc(c,f_new);
+	if(!feof(f_ori)) fputc(c,f_new);
 	}
-	return 0;
+	
 }
 
+void getPar(string path, int ln){
+	int count;
+	file f;
+	char c;
+
+	count=1;
+	f=fopen(path,"r");
+
+	while(count<ln){
+	//no local variable here
+		c='a';
+		while(c!='\n'){
+			c=fgetc(f);
+			//print("%c",c);
+		}
+		count++;
+	}
+	//print("%s\n","helloooo");
+	c='a';
+	while(c!='\n'){
+		c=fgetc(f);
+		print("%c",c);
+	}
+	//print("\n");
+	
+}
 
 char getChar(string path, int ln, int col){
 
@@ -57,7 +91,6 @@ char getChar(string path, int ln, int col){
 		c='a';
 		while(c!='\n'){
 			c=fgetc(f);
-
 		}
 		line++;
 	}
@@ -77,16 +110,22 @@ int main()
 	file kk;
 	int count_line;
 	bool flag;
-	//kk=fopen("h.txt","r");
-	a=0;
+	string s;
 
+	
+	//kk=fopen("h.txt","r");
+	
+	//countline("h.txt");
 	//flag=false;
 	//print("%d\n",countline("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa"));
 	//print("%c\n",getChar("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa",10,4));
 	//fputc('c',fopen("h.txt","a"));
-	copyfile("h.txt","1111.txt");
+	//copyfile("h.txt","1111.txt");
+	//mergefile("11.txt","h.txt","ha.txt");
+	getPar("11.txt",4);
+	
 	/*
-	if (flag) print("%d\n",1);
+	if (flag) print("%d\n",3);
 	else print("%d\n",0);
 	*/
 	
