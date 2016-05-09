@@ -129,6 +129,7 @@ expr:
   | FLOAT_LITERAL     {Float_Lit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
+  | typ ID LBRACKET expr RBRACKET { Vectors($1, $2, $4) }
   | ID               { Id($1) }
   | ID SPLUS         { Binop(Assign($1,Binop(Ast.Id($1), Add, Ast.Literal(1))),Sub,Ast.Literal(1))}
   | ID SMINUS        { Binop(Assign($1,Binop(Ast.Id($1), Sub, Ast.Literal(1))),Add,Ast.Literal(1))}
@@ -151,6 +152,8 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+  | ID LBRACKET expr  RBRACKET { Ary($1,$3) }
+  | ID LBRACKET expr  RBRACKET ASSIGN expr { Aryasn($1,$3,$6) }
   
 
 actuals_opt:

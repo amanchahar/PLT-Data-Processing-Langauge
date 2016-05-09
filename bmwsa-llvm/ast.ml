@@ -23,6 +23,9 @@ type expr =
   | Assign of string * expr
   | Call of string * expr list
   | L of typ * string * dtype
+  | Ary of string* expr
+  | Aryasn of string* expr* expr
+  | Vectors of typ*string * expr
   | Noexpr
 
 type stmt =

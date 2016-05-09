@@ -416,6 +416,18 @@ let rec expr builder = function
      | A.Char_Lit c -> L.const_int i8_t (Char.code c)
       | A.Noexpr -> L.const_int i32_t 0
       | A.Id s -> L.build_load (lookup s) s builder
+
+        | A.Ary(e1, e2) -> let para1=(expr builder (A.Id e1)) 
+  and para2=(expr builder e2) in 
+  let k=L.build_in_bounds_gep para1 [|para2|] "tmpp" builder in
+  L.build_load k "deref" builder
+  | A.Aryasn(e1, e2,e3) -> let para1=(expr builder (A.Id e1)) 
+  and para2=(expr builder e2) 
+  and para3=(expr builder e3) 
+  in let k=L.build_in_bounds_gep para1 [|para2|] "tmpp" builder in
+  L.build_store para3 k builder
+  
+
       | A.Binop (e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in
