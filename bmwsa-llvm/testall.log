@@ -36,16 +36,42 @@ lli test-comments2.ll > test-comments2.out
 diff -b test-comments2.out tests/test-comments2.out > test-comments2.diff
 ###### SUCCESS
 
+###### Testing test-countlines
+./microc.native < tests/test-countlines.bmwsa > test-countlines.ll
+lli test-countlines.ll > test-countlines.out
+diff -b test-countlines.out tests/test-countlines.out > test-countlines.diff
+###### SUCCESS
+
 ###### Testing test-fib
 ./microc.native < tests/test-fib.bmwsa > test-fib.ll
 lli test-fib.ll > test-fib.out
 diff -b test-fib.out tests/test-fib.out > test-fib.diff
 ###### SUCCESS
 
+###### Testing test-filetype
+./microc.native < tests/test-filetype.bmwsa > test-filetype.ll
+lli test-filetype.ll > test-filetype.out
+diff -b test-filetype.out tests/test-filetype.out > test-filetype.diff
+###### SUCCESS
+
 ###### Testing test-float1
 ./microc.native < tests/test-float1.bmwsa > test-float1.ll
 lli test-float1.ll > test-float1.out
 diff -b test-float1.out tests/test-float1.out > test-float1.diff
+###### SUCCESS
+
+###### Testing test-floatintadd
+./microc.native < tests/test-floatintadd.bmwsa > test-floatintadd.ll
+lli test-floatintadd.ll > test-floatintadd.out
+lli: test-floatintadd.ll:80:109: error: operands of constexpr must have same type
+  %printf = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @fmt1, i32 0, i32 0), double add (double 5.200000e+00, i32 4))
+                                                                                                            ^
+###### FAILED
+
+###### Testing test-fopen
+./microc.native < tests/test-fopen.bmwsa > test-fopen.ll
+lli test-fopen.ll > test-fopen.out
+diff -b test-fopen.out tests/test-fopen.out > test-fopen.diff
 ###### SUCCESS
 
 ###### Testing test-for1
@@ -180,6 +206,22 @@ lli test-if5.ll > test-if5.out
 diff -b test-if5.out tests/test-if5.out > test-if5.diff
 ###### SUCCESS
 
+###### Testing test-include
+./microc.native < tests/test-include.bmwsa > test-include.ll
+Fatal error: exception Not_found
+###### FAILED
+
+###### Testing test-includedeclare
+./microc.native < tests/test-includedeclare.bmwsa > test-includedeclare.ll
+lli test-includedeclare.ll > test-includedeclare.out
+diff -b test-includedeclare.out tests/test-includedeclare.out > test-includedeclare.diff
+###### SUCCESS
+
+###### Testing test-includefunction
+./microc.native < tests/test-includefunction.bmwsa > test-includefunction.ll
+Fatal error: exception Not_found
+###### FAILED
+
 ###### Testing test-local1
 ./microc.native < tests/test-local1.bmwsa > test-local1.ll
 lli test-local1.ll > test-local1.out
@@ -205,9 +247,9 @@ Fatal error: exception Parsing.Parse_error
 ###### Testing test-stringconcat_print
 ./microc.native < tests/test-stringconcat_print.bmwsa > test-stringconcat_print.ll
 lli test-stringconcat_print.ll > test-stringconcat_print.out
-lli: test-stringconcat_print.ll:24:104: error: constexpr requires fp operands
-  %tmp1 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @fmt2, i32 0, i32 0), i8* fadd (i8* getelementptr inbounds ([14 x i8]* @tmp1, i32 0, i32 0), i8* getelementptr inbounds ([7 x i8]* @tmp11, i32 0, i32 0)))
-                                                                                                       ^
+lli: test-stringconcat_print.ll:82:105: error: constexpr requires fp operands
+  %tmp1 = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @fmt22, i32 0, i32 0), i8* fadd (i8* getelementptr inbounds ([14 x i8]* @tmp15, i32 0, i32 0), i8* getelementptr inbounds ([7 x i8]* @tmp16, i32 0, i32 0)))
+                                                                                                        ^
 ###### FAILED
 
 ###### Testing test-var1

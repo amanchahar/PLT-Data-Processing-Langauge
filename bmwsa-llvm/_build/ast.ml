@@ -33,6 +33,8 @@ type stmt =
   | For of expr * expr * expr * stmt
   | While of expr * stmt
 
+type include_stmt = Include of string
+
 type func_decl = {
     typ : typ;
     fname : string;
@@ -41,7 +43,9 @@ type func_decl = {
     body : stmt list;
   }
 
-type program = bind list * func_decl list
+type decls_val = bind list * func_decl list
+
+type program =  Program of include_stmt list * decls_val
 
 (* Pretty-printing functions *)
 
@@ -98,6 +102,7 @@ let string_of_typ = function
   | Void -> "void"
   | String_t -> "string"
   | Float -> "float"
+  | Char -> "char"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
@@ -109,6 +114,7 @@ let string_of_fdecl fdecl =
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
 
-let string_of_program (vars, funcs) =
+let string_of_program (Program(first, second)) =
+  let (vars,funcs) = second in 
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_fdecl funcs)

@@ -7,6 +7,7 @@ type token =
   | COMMA
   | RBRACKET
   | LBRACKET
+  | INCLUDE
   | PLUS
   | MINUS
   | TIMES

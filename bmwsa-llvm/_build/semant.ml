@@ -9,8 +9,15 @@ module StringMap = Map.Make(String)
 
    Check each global variable, then check each function *)
 
-let check (globals, functions) =
+let initial_check (Program(program1, decls_val)) = 
 
+(* match program1 with Program(includes, decls_val) ->  *)
+
+let (globals, functions) = decls_val in 
+
+(* let check (globals,functions )= *)
+
+  
   (* Raise an exception if the given list has a duplicate *)
   let report_duplicate exceptf list =
     let rec helper = function
@@ -132,12 +139,16 @@ let check (globals, functions) =
 
     | Unop(op, e) as ex -> let t = expr e in
 
-	 (match op with
-	   Neg when t = Int -> Int
-	 | Not when t = Bool -> Bool
-         | _ -> raise (Failure ("illegal unary operator " ^ string_of_uop op ^
-	  		   string_of_typ t ^ " in " ^ string_of_expr ex)))
+	         (  match op with
+	             Neg when t = Int -> Int
+	           | Not when t = Bool -> Bool
+             | _ -> raise (Failure ("illegal unary operator " ^ string_of_uop op ^
+	  		      string_of_typ t ^ " in " ^ string_of_expr ex))
+
+         )
+
       | Noexpr -> Void
+      
       | Assign(var, e) as ex -> let lt = type_of_identifier var
                                 and rt = expr e in
         check_assign lt rt (Failure ("illegal assignment " ^ string_of_typ lt ^

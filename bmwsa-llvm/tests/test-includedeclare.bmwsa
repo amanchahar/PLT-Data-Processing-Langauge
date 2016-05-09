@@ -1,0 +1,9 @@
+include("stdlib");
+
+int a;
+
+int main()
+{
+	print(4);
+	return 0;
+}

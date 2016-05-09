@@ -1,0 +1,5 @@
+int main()
+{
+	fputs("Aman",fopen("fopen.txt","a"));
+	return 0;
+}

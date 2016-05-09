@@ -1,0 +1,18 @@
+
+int countline(string path){
+	int count;
+	char c;
+	file f;
+
+	
+	
+	count=1;
+	f=fopen(path,"r");
+
+	
+	while(!feof(f)){
+	c=fgetc(f);
+	if(c=='\n') count++;
+	}
+	return count;
+}

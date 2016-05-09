@@ -9,14 +9,21 @@ let _ =
 			      ("-l", LLVM_IR);  (* Generate LLVM, don't check *)
 			      ("-c", Compile) ] (* Generate, check LLVM IR *)
   else Compile in
+  (* let file_in  = open_in "stdlib.bmwsa" in  *)
   let lexbuf = Lexing.from_channel stdin in
   let ast = Parser.program Scanner.token lexbuf in
-  Semant.check ast;
+  Semant.initial_check ast;
   (*(try Semant.check ast
   with _->print_string(";sbsbsbsbsbsbsb\n"));*)
+
+  let file_in  = open_in "stdlib.bmwsa" in
+  let lexbuf2 = Lexing.from_channel file_in in
+  let ast2 = Parser.program Scanner.token lexbuf2 in 
+  Semant.initial_check ast;
+
   match action with
     Ast -> print_string (Ast.string_of_program ast)
-  | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate ast))
-  | Compile -> let m = Codegen.translate ast in
+  | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate (ast,ast2) ))
+  | Compile -> let m = Codegen.translate (ast,ast2) in
     Llvm_analysis.assert_valid_module m;
     print_string (Llvm.string_of_llmodule m)

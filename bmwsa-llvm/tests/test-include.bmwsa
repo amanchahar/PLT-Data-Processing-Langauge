@@ -1,0 +1,7 @@
+include("stdlib");
+
+int main()
+{
+	print(fun(1,2));
+	return 0;
+}

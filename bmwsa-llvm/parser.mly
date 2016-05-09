@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA RBRACKET LBRACKET
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA RBRACKET LBRACKET INCLUDE
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT SPLUS SMINUS
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL VOID FLOAT CHAR STRING
@@ -32,11 +32,27 @@ open Ast
 %%
 
 program:
-  decls EOF { $1 }
+    includes decls EOF { Program($1,$2) }
+
+/******************
+  INCLUDE
+******************/
+
+includes:
+    /* nothing */ { [] }
+    |   include_list  { List.rev $1 }
+
+include_list:
+      include_decl              { [$1] }
+    |   include_list include_decl { $2::$1 }
+
+include_decl:
+  INCLUDE LPAREN STRING_LITERAL RPAREN SEMI { Include($3) }
+
 
 decls:
    /* nothing */ { [], [] }
- | decls vdecl { ($2 :: fst $1), snd $1 }
+ | decls vdecl { ($2 :: fst $1), snd $1}
  | decls fdecl { fst $1, ($2 :: snd $1) }
 
 fdecl:

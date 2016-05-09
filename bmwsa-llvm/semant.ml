@@ -9,8 +9,15 @@ module StringMap = Map.Make(String)
 
    Check each global variable, then check each function *)
 
-let check (globals, functions) =
+let initial_check (Program(program1, decls_val)) = 
 
+(* match program1 with Program(includes, decls_val) ->  *)
+
+let (globals, functions) = decls_val in 
+
+(* let check (globals,functions )= *)
+
+  
   (* Raise an exception if the given list has a duplicate *)
   let report_duplicate exceptf list =
     let rec helper = function

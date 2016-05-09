@@ -1,0 +1,5 @@
+int main()
+{
+	file k;
+	return 0;
+}
