@@ -1,5 +1,114 @@
-fclose
-fclear
+//fclose
+//fclear
+
+void deleteLine(string path, int start, int end){
+	file f;
+	file temp;
+	int count;
+	char c;
+	
+	f=fopen(path,"r");
+	temp=fopen("temp.txt","a");
+	count=1;
+	while(count<start){
+		c=fgetc(f);
+		if (c=='\n') count++;
+		fputc(c,temp);
+	}
+	while(count<=end){
+		c=fgetc(f);
+		if (c=='\n') count++;
+	}
+	while(!feof(f)){
+		c=fgetc(f);
+		if(!feof(f)) fputc(c,temp);
+	}
+	remove(path);
+	rename("temp.txt",path);
+	
+	
+	
+
+}
+
+int main()
+{
+	int a;
+	char c;
+	file kk;
+	int count_line;
+	bool flag;
+	string s;
+
+	deleteLine("1.ll",19,23);
+	//rename("2.ll","22.ll");
+	//deleteLine("1.ll",19,22);
+	//remove("temp.txt");
+	//splitfile("split_1.txt","split_2.txt","1.ll",30,9);
+	
+	//kk=fopen("h.txt","r");
+	
+	//countline("h.txt");
+	//flag=false;
+	//print("%d\n",countline("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa"));
+	//print("%c\n",getChar("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa",10,4));
+	//fputc('c',fopen("h.txt","a"));
+	//copyfile("h.txt","1111.txt");
+	//mergefile("11.txt","h.txt","ha.txt");
+	//getPar("11.txt",4);
+	
+	/*
+	if (flag) print("%d\n",3);
+	else print("%d\n",0);
+	*/
+	
+	/*
+	count_line=0;
+	while(!flag){
+	flag=feof(kk);
+	//c=fgetc(kk);
+	c=countline(kk);
+	//print("%d,    %c\n",a,c);
+	print("%c",c);
+	if (c=='\n') {print("\n");count_line++;}
+	}
+	print("%d\n",count_line);
+	*/
+	
+	
+	
+	
+	
+	
+	/*
+	while(a<10){
+	c=fgetc(kk);
+	print("%c\n",c);
+	a++;
+	}
+	*/
+	//print("%ld",size("/home/cbk/Documents/bmwsa-llvm/1.ll"));
+
+	/*
+	c='a';
+	print("%c",c);
+	a=1;
+	print("%d\n",a++);
+	print("%d\n",a);
+	print("%d\n",a++);
+	print("%d\n",a);
+	while(a<5){
+	print("%d\n",++a);
+	}
+	*/
+	/*
+	for(a=1;a<=5;a++){
+	print("%d\n",a);
+	}
+	*/
+	//fputs("good job \n",fopen("h.txt","a"));
+	return 0;
+}
 
 
 
@@ -22,6 +131,9 @@ int countline(string path){
 	}
 	return count;
 }
+
+
+
 void splitfile(string obj_path1, string obj_path2, string ori_path, int ln, int col){
 	file obj1;
 	file obj2;
@@ -144,77 +256,3 @@ char getChar(string path, int ln, int col){
 }
 
 
-int main()
-{
-	int a;
-	char c;
-	file kk;
-	int count_line;
-	bool flag;
-	string s;
-
-	splitfile("split_1.txt","split_2.txt","1.ll",30,9);
-	
-	//kk=fopen("h.txt","r");
-	
-	//countline("h.txt");
-	//flag=false;
-	//print("%d\n",countline("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa"));
-	//print("%c\n",getChar("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa",10,4));
-	//fputc('c',fopen("h.txt","a"));
-	//copyfile("h.txt","1111.txt");
-	//mergefile("11.txt","h.txt","ha.txt");
-	//getPar("11.txt",4);
-	
-	/*
-	if (flag) print("%d\n",3);
-	else print("%d\n",0);
-	*/
-	
-	/*
-	count_line=0;
-	while(!flag){
-	flag=feof(kk);
-	//c=fgetc(kk);
-	c=countline(kk);
-	//print("%d,    %c\n",a,c);
-	print("%c",c);
-	if (c=='\n') {print("\n");count_line++;}
-	}
-	print("%d\n",count_line);
-	*/
-	
-	
-	
-	
-	
-	
-	/*
-	while(a<10){
-	c=fgetc(kk);
-	print("%c\n",c);
-	a++;
-	}
-	*/
-	//print("%ld",size("/home/cbk/Documents/bmwsa-llvm/1.ll"));
-
-	/*
-	c='a';
-	print("%c",c);
-	a=1;
-	print("%d\n",a++);
-	print("%d\n",a);
-	print("%d\n",a++);
-	print("%d\n",a);
-	while(a<5){
-	print("%d\n",++a);
-	}
-	*/
-	/*
-	for(a=1;a<=5;a++){
-	print("%d\n",a);
-	}
-	*/
-	//fputs("good job \n",fopen("h.txt","a"));
-	return 0;
-}
