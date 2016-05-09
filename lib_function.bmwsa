@@ -1,35 +1,7 @@
 //fclose
 //fclear
 
-void deleteLine(string path, int start, int end){
-	file f;
-	file temp;
-	int count;
-	char c;
-	
-	f=fopen(path,"r");
-	temp=fopen("temp.txt","a");
-	count=1;
-	while(count<start){
-		c=fgetc(f);
-		if (c=='\n') count++;
-		fputc(c,temp);
-	}
-	while(count<=end){
-		c=fgetc(f);
-		if (c=='\n') count++;
-	}
-	while(!feof(f)){
-		c=fgetc(f);
-		if(!feof(f)) fputc(c,temp);
-	}
-	remove(path);
-	rename("temp.txt",path);
-	
-	
-	
 
-}
 
 int main()
 {
@@ -40,7 +12,7 @@ int main()
 	bool flag;
 	string s;
 
-	deleteLine("1.ll",19,23);
+	//deleteLine("1.ll",19,23);
 	//rename("2.ll","22.ll");
 	//deleteLine("1.ll",19,22);
 	//remove("temp.txt");
@@ -107,9 +79,75 @@ int main()
 	}
 	*/
 	//fputs("good job \n",fopen("h.txt","a"));
+	//print("%d\n",deleteLine("4.ll",44,45));
+	print("%d\n",getChar("4.ll",-44,4));
 	return 0;
 }
+int getChar(string path, int ln, int col){
+//success 1, fail 0
+	
+	char c;
+	int line;
+	file f;
+	int count;
+	
 
+	c='a';
+	line=1;
+	f=fopen(path,"r");
+	
+	if(ln<=0||col<=0) return 0;
+	while(line<ln){
+		c='a';
+		while(c!='\n'){
+			if(feof(f)) return 0;
+			c=fgetc(f);
+		}
+		line++;
+		if(feof(f)) return 0;
+	}
+	count=0;
+	while(count<col){
+		if(feof(f)) return 0;
+		count++;
+		c=fgetc(f);
+	}
+	if(feof(f)||c=='\n') return 0;
+	print("%c\n",c);
+	return 1;
+}
+
+
+int deleteLine(string path, int start, int end){
+//success returns 1, otherwise 0
+	file f;
+	file temp;
+	int count;
+	char c;
+	
+	if(start>end||start<=0||end=0) return 0;
+	f=fopen(path,"r");
+	temp=fopen("HopeNoFileGetsThisName.txt","a");
+	count=1;
+	while(count<start){
+		if(feof(f)) {remove("HopeNoFileGetsThisName.txt");return 0;}
+		c=fgetc(f);
+		if (c=='\n') count++;
+		fputc(c,temp);
+	}
+	while(count<=end){
+		c=fgetc(f);
+		if (c=='\n') count++;
+	}
+	while(!feof(f)){
+		c=fgetc(f);
+		if(!feof(f)) fputc(c,temp);
+	}
+	remove(path);
+	rename("HopeNoFileGetsThisName.txt",path);
+	return 1;
+
+}
 
 
 
@@ -134,7 +172,8 @@ int countline(string path){
 
 
 
-void splitfile(string obj_path1, string obj_path2, string ori_path, int ln, int col){
+int splitfile(string obj_path1, string obj_path2, string ori_path, int ln, int col){
+
 	file obj1;
 	file obj2;
 	file ori;
@@ -166,6 +205,7 @@ void splitfile(string obj_path1, string obj_path2, string ori_path, int ln, int 
 		c=fgetc(ori);
 		if(!feof(ori)) fputc(c,obj2);
 	}
+	return 1;
 
 
 
@@ -201,58 +241,47 @@ void copyfile(string path1, string path2){
 	
 }
 
-void getPar(string path, int ln){
+int getLine(string path, int ln){
+//success 1, fail 0
 	int count;
 	file f;
 	char c;
 
 	count=1;
 	f=fopen(path,"r");
-
+	if(ln<=0) return 0;
 	while(count<ln){
 	//no local variable here
+		
 		c='a';
 		while(c!='\n'){
+			if(feof(f)) return 0;
 			c=fgetc(f);
 			//print("%c",c);
 		}
 		count++;
+		if(feof(f)) return 0;
+		
 	}
-	//print("%s\n","helloooo");
+	//print("%d\n",count);
+	c=fgetc(f);
+	if(feof(f)) return 0;
+	while(c!='\n'){	
+		print("%c",c);
+		c=fgetc(f);
+	}
+
+/*
+	if(feof(f)) return 0;
 	c='a';
+
 	while(c!='\n'){
 		c=fgetc(f);
 		print("%c",c);
-	}
-	//print("\n");
+	}*/
+	print("\n");
+	return 1;
 	
-}
-
-char getChar(string path, int ln, int col){
-
-	char c;
-	int line;
-	file f;
-	int count;
-	
-
-	c='a';
-	line=1;
-	f=fopen(path,"r");
-	
-	while(line<ln){
-		c='a';
-		while(c!='\n'){
-			c=fgetc(f);
-		}
-		line++;
-	}
-	count=0;
-	while(count<col){
-		count++;
-		c=fgetc(f);
-	}
-	return c;
 }
 
 
