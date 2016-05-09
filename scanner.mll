@@ -58,8 +58,8 @@ rule token = parse
 | "while"  { WHILE }
 | "return" { RETURN }
 | "int"    { INT }
+| "file"   { STRING }
 | "string" { STRING }
-| "file"   {STRING }
 | "char"	{ CHAR }
 | "bool"   { BOOL }
 | "void"   { VOID }

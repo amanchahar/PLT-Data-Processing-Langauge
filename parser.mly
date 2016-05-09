@@ -132,6 +132,8 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+  | ID LBRACKET LITERAL  RBRACKET { Ary($1,$3) }
+  | ID LBRACKET LITERAL  RBRACKET ASSIGN expr { Aryasn($1,$3,$6) }
 
 actuals_opt:
     /* nothing */ { [] }

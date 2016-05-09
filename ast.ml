@@ -24,6 +24,8 @@ type expr =
   | Call of string * expr list
   | L of typ * string * dtype
   | Noexpr
+  | Ary of string* int
+  | Aryasn of string *int * expr 
 
 type stmt =
     Block of stmt list

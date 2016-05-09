@@ -29,7 +29,6 @@ let translate (globals, functions) =
   let str_t = L.pointer_type i8_t 
   and void_ptr=L.pointer_type i32_t in
 
-
   let ltype_of_typ = function
       A.Int -> i32_t
     | A.Bool -> i1_t
@@ -52,6 +51,7 @@ let translate (globals, functions) =
   and fseek_t=(L.function_type str_t [|str_t;i64_t;i32_t|])
   and ftell_t=(L.function_type i64_t [|str_t|])
   and fgetc_t=(L.function_type i8_t [|str_t|])
+  and memcpy_t=(L.function_type i8_t [|str_t;str_t;i32_t|])
 in
   let printf_func = L.declare_function "printf" printf_t the_module 
   and fgetc_fun=L.declare_function "fgetc" fgetc_t the_module
@@ -59,6 +59,7 @@ in
   and fputs_fun=L.declare_function "fputs" fputs_t the_module
   and fseek_fun=L.declare_function "fseek" fseek_t the_module
   and ftell_fun=L.declare_function "ftell" ftell_t the_module
+  and memcpy_fun=L.declare_function "memcpy" memcpy_t the_module
 in 
 
 
@@ -135,6 +136,14 @@ let rec expr builder = function
   A.Literal i -> L.const_int i32_t i
   | A.Char_Lit c -> L.const_int i8_t (Char.code c)
   | A.Float_Lit f -> L.const_float f_t f 
+  | A.Ary(e1, e2) -> let para1=(expr builder (A.Id e1)) and para2=(expr builder (A.Literal e2)) in 
+  let k=L.build_in_bounds_gep para1 [|para2|] "tmpp" builder in
+  L.build_load k "deref" builder
+  | A.Aryasn(e1, e2, e3) -> let para1=(expr builder (A.Id e1)) 
+  and para2=(expr builder (A.Literal e2))
+  and para3=expr builder e3 in 
+  let k=L.build_in_bounds_gep para1 [|para2|] "tmpp" builder in
+  L.build_store para3 k builder
      | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
      | A.String_Lit s -> codegen_string_build s builder 
       | A.Noexpr -> L.const_int i32_t 0
@@ -169,20 +178,26 @@ and tp3=(L.type_of e1') in
       let actuals = List.rev (List.map (expr builder) (List.rev e)) in
   L.build_call printf_func (Array.of_list actuals) "tmp1" builder 
 
+
       | A.Call ("size",[e]) -> let cnt=expr builder e in 
       let cnt2=(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder) in
       L.build_call ftell_fun [|cnt2|] "tmp7" builder
       | A.Call ("fgetc",[e]) -> let cnt=expr builder e in
-  L.build_call fgetc_fun [|cnt|] "temp1" builder
+    L.build_call fgetc_fun [|cnt|] "temp1" builder
+      | A.Call ("f",[e]) -> let cnt =expr builder e in 
+      L.operand cnt 1
 
       | A.Call ("fff", [e;f]) -> let cnt=expr builder e and cnt2=expr builder f in
-  L.build_call fputs_fun [|cnt2;(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder)|] "tmp5" builder
+      L.build_call fputs_fun [|cnt2;(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder)|] "tmp5" builder
+      
+      | A.Call ("memcpy",e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+      L.build_call memcpy_fun (Array.of_list actuals) "tmp8" builder 
 
       | A.Call ("fopen", e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
-  L.build_call fopen_fun (Array.of_list actuals) "tmp2" builder 
+      L.build_call fopen_fun (Array.of_list actuals) "tmp2" builder 
       | A.Call ("fputs",e) ->let actuals = List.rev (List.map (expr builder) (List.rev e)) in
-  L.build_call fputs_fun (Array.of_list actuals) "tmp3" builder 
-     | A.Call (f, act) ->
+      L.build_call fputs_fun (Array.of_list actuals) "tmp3" builder 
+      | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
    let actuals = List.rev (List.map (expr builder) (List.rev act)) in
    let result = (match fdecl.A.typ with A.Void -> ""
