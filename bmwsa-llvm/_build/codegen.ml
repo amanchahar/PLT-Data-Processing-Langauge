@@ -298,9 +298,9 @@ let rec translate (A.Program(first, second), A.Program(first1,second1)) =
     | A.Void -> void_t
     | A.Float -> f_t
     | A.Char -> i8_t
-
-    | A.String_t -> str_t in
-
+    | A.String_t -> str_t    
+    | A.Intptr -> L.pointer_type i32_t
+    | A.String_p -> L.pointer_type str_t in
   (* Declare each global variable; remember its value in a map *)
   let global_vars =
     let global_var m (t, n) =
@@ -321,6 +321,7 @@ let rec translate (A.Program(first, second), A.Program(first1,second1)) =
   and frename_t=(L.function_type i32_t [|str_t;str_t|])
   and memcpy_t = (L.function_type i8_t [|str_t;str_t;i32_t|])
   and malloc_t = (L.function_type str_t [|i32_t|])
+  and calloc_t=(L.function_type str_t [|i32_t;i32_t|])
 in
   let printf_func = L.declare_function "printf" printf_t the_module 
   and feof_fun=L.declare_function "feof" feof_t the_module
@@ -334,6 +335,7 @@ in
   and frename_fun=L.declare_function "rename" frename_t the_module
   and memcpy_fun = L.declare_function "memcpy" memcpy_t the_module
   and malloc_fun = L.declare_function "malloc" malloc_t the_module
+  and calloc_fun=L.declare_function "calloc" calloc_t the_module
 in 
 
 
@@ -430,6 +432,12 @@ let rec expr builder = function
   and para3=(expr builder e3) 
   in let k=L.build_in_bounds_gep para1 [|para2|] "tmpp" builder in
   L.build_store para3 k builder
+  |   A.Init(e1,e2) -> let cnt1= (lookup e1) and cnt2= expr builder e2 in 
+  let tp=L.element_type (L.type_of cnt1) in
+  let sz=L.size_of tp in
+  let sz1=L.const_intcast sz (i32_t) false in
+  let dt=L.build_bitcast (L.build_call calloc_fun [|cnt2;sz1|] "tmpa" builder) tp "tmpb" builder in
+  L.build_store dt cnt1 builder
 
 
       | A.Binop (e1, op, e2) ->

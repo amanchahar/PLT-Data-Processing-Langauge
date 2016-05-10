@@ -37,6 +37,7 @@ type token =
   | FLOAT
   | CHAR
   | STRING
+  | NEW
   | LITERAL of (int)
   | FLOAT_LITERAL of (float)
   | STRING_LITERAL of (string)

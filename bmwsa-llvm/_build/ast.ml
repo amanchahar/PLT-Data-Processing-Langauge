@@ -5,7 +5,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | Char | Float | String_t
+type typ = Int | Bool | Void | Char | Float | String_t | Intptr |String_p
 
 type dtype = Arraytype of typ * int | Dtype of typ
 
@@ -26,6 +26,7 @@ type expr =
   | Ary of string* expr
   | Aryasn of string* expr* expr
   | Vectors of typ*string * expr
+  | Init of string * expr 
   | Noexpr
 
 type stmt =

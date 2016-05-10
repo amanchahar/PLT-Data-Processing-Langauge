@@ -7,7 +7,7 @@ open Ast
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA RBRACKET LBRACKET INCLUDE
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT SPLUS SMINUS
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL VOID FLOAT CHAR STRING
+%token RETURN IF ELSE FOR WHILE INT BOOL VOID FLOAT CHAR STRING NEW
 %token <int> LITERAL
 %token <float> FLOAT_LITERAL
 %token <string> STRING_LITERAL
@@ -78,7 +78,8 @@ typ:
   | FLOAT { Float }
   |	CHAR { Char }
   | STRING {String_t}
-  
+  | INT TIMES { Intptr}
+  | STRING TIMES { String_p } 
 
 
 array_t: 
@@ -154,6 +155,7 @@ expr:
   | LPAREN expr RPAREN { $2 }
   | ID LBRACKET expr  RBRACKET { Ary($1,$3) }
   | ID LBRACKET expr  RBRACKET ASSIGN expr { Aryasn($1,$3,$6) }
+  | ID ASSIGN NEW LBRACKET expr RBRACKET { Init($1,$5) }
 
 
 actuals_opt:
