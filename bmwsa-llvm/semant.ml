@@ -155,7 +155,7 @@ let (globals, functions) = decls_val in
 				     " = " ^ string_of_typ rt ^ " in " ^ 
 				     string_of_expr ex))
       | Call(fname, actuals) as call -> let fd = function_decl fname in
-         if fname<>"print" then 
+         if fname<>"printx" then 
 
          ( if List.length actuals != List.length fd.formals then
            raise (Failure ("expecting " ^ string_of_int

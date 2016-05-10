@@ -336,6 +336,7 @@ in
   and memcpy_fun = L.declare_function "memcpy" memcpy_t the_module
   and malloc_fun = L.declare_function "malloc" malloc_t the_module
   and calloc_fun=L.declare_function "calloc" calloc_t the_module
+  and strtok_fun=L.declare_function "strtok" fopen_t the_module
 in 
 
 
@@ -446,10 +447,10 @@ let rec expr builder = function
     let tp1=(L.type_of (L.const_int i32_t 3)) and tp2=(L.type_of (L.const_float f_t 3.2)) 
 and tp3=(L.type_of e1') in
 	  (match op with
-	    A.Add     -> (if tp1=tp3 then (L.build_add) else (L.build_fadd))
-	  | A.Sub     -> (if tp1=tp3 then (L.build_sub) else (L.build_fsub))
-	  | A.Mult    -> (if tp1=tp3 then (L.build_mul) else (L.build_fmul))
-    | A.Div     -> (if tp1=tp3 then (L.build_sdiv) else (L.build_fdiv))
+	    A.Add     -> (if tp1=tp2 then (L.build_fadd) else (L.build_add))
+	  | A.Sub     -> (if tp1=tp2 then (L.build_fsub) else (L.build_sub))
+	  | A.Mult    -> (if tp1=tp2 then (L.build_fmul) else (L.build_mul))
+    | A.Div     -> (if tp1=tp2 then (L.build_fdiv) else (L.build_sdiv))
 	  | A.And     -> L.build_and
 	  | A.Or      -> L.build_or
 	  | A.Equal   -> L.build_icmp L.Icmp.Eq
@@ -474,6 +475,9 @@ and tp3=(L.type_of e1') in
 | A.Call ("printx", e)  ->
       let actuals = List.rev (List.map (expr builder) (List.rev e)) in
   L.build_call printf_func (Array.of_list actuals) "tmp1" builder 
+  | A.Call("strtok",e)->
+      let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+  L.build_call strtok_fun (Array.of_list actuals) "tmpx" builder 
 
       | A.Call ("size",[e]) -> let cnt=expr builder e in 
       let cnt2=(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder) in
