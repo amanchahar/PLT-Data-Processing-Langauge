@@ -1,0 +1,448 @@
+//fclose
+//fclear
+
+
+
+int main()
+{
+	int a;
+	char c;
+	file kk;
+	int count_line;
+	bool flag;
+	string s1;
+	string s2;
+	
+	
+	//print("%d",'1'=='1');
+	//print("%c",s[0]);
+	//deleteLine("1.ll",19,23);
+	//rename("2.ll","22.ll");
+	//deleteLine("1.ll",19,22);
+	//remove("temp.txt");
+	//splitfile("split_1.txt","split_2.txt","1.ll",30,9);
+	
+	//kk=fopen("h.txt","r");
+	
+	//countline("h.txt");
+	//flag=false;
+	//print("%d\n",countline("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa"));
+	//print("%c\n",getChar("/home/cbk/Documents/bmwsa-llvm/tests/1.bmwsa",10,4));
+	//fputc('c',fopen("h.txt","a"));
+	//copyfile("h.txt","1111.txt");
+	//mergefile("11.txt","h.txt","ha.txt");
+	//getPar("11.txt",4);
+	
+	/*
+	if (flag) print("%d\n",3);
+	else print("%d\n",0);
+	*/
+	
+	/*
+	count_line=0;
+	while(!flag){
+	flag=feof(kk);
+	//c=fgetc(kk);
+	c=countline(kk);
+	//print("%d,    %c\n",a,c);
+	print("%c",c);
+	if (c=='\n') {print("\n");count_line++;}
+	}
+	print("%d\n",count_line);
+	*/
+	
+	
+	
+	
+	
+	
+	/*
+	while(a<10){
+	c=fgetc(kk);
+	print("%c\n",c);
+	a++;
+	}
+	*/
+	//print("%ld",size("/home/cbk/Documents/bmwsa-llvm/1.ll"));
+
+	/*
+	c='a';
+	print("%c",c);
+	a=1;
+	print("%d\n",a++);
+	print("%d\n",a);
+	print("%d\n",a++);
+	print("%d\n",a);
+	while(a<5){
+	print("%d\n",++a);
+	}
+	*/
+	/*
+	for(a=1;a<=5;a++){
+	print("%d\n",a);
+	}
+	*/
+	//fputs("good job \n",fopen("h.txt","a"));
+	//print("%d\n",deleteLine("4.ll",44,45));
+	//remove("HopeNoFileGetsThisName.txt");
+	//print("%d\n",insert("4.ll","Insert something",44,4));
+	//insert("4.ll","Insert something",44,4);
+	//remove("HopeNoFileGetsThisName.txt");
+	//print("%d",deleteLine("1.ll",17,19));
+	//print("%d\n",insert("b.txt","hello",28,0));
+	//deleteLine("1.ll",13,13);
+	//print("%d\n",searchwords("11.txt","Reads",5));
+	
+	/*a=0;
+	s1="abcde";
+	while(a<10 && s1[a]!='\0'){
+		print("%c",s1[a]);
+		a++;	
+	}*/
+	replacewords("11.txt","Reads","ABC",5);
+	return 0;
+}
+
+/*
+int lengthof(string s){
+	int count;
+
+	count=0;
+	while(s[count]!=''){
+		count++;	
+	}
+	return count;
+}
+*/
+int getString(string s, int l){
+	return 0;
+}
+int deleteword(string path, string word, int l){
+	replacewords(path,word,"",l);
+}
+
+int replacewords(string path, string word, string replace, int l){
+	file f;
+	file temp;
+	int count;
+	char c;
+	int index;
+	bool newstart;
+	bool before;
+	int strlen;
+	string s1;
+	string s2;
+	int i;
+	
+	s1=malloc(1000);
+	count=0;
+	index=0;
+	newstart=true;
+	before=false;
+	remove("HopeNoFileGetsThisName.txt");
+	f=fopen(path,"r");
+	temp=fopen("HopeNoFileGetsThisName.txt","a");
+	
+	while(!feof(f)){
+			
+		c=fgetc(f);
+
+		if(c==' '|| c=='\n') {
+			
+			if(before&&index==l) {
+				fputs(replace,temp);
+				count++;
+			}
+			else {
+				for(i=0;i<index;i++){
+					fputc(s1[i],temp);
+				}			
+			}
+			fputc(c,temp);
+			before=false;
+			newstart=true;
+			index=0;		
+		}else{
+		if((newstart||before)&&c==word[index]&&index<l) {before=true;newstart=false;}
+		else {before=false;newstart=false;}
+		s1[index]=c;
+		index++;}
+
+		
+	}	
+
+	return count;
+
+}
+int searchwords (string path, string word,int l){
+	file f;
+	int count;
+	char c;
+	int index;
+	bool newstart;
+	bool before;
+	
+	count=0;
+	index=0;
+	newstart=true;
+	before=false;
+	f=fopen(path,"r");
+	
+	while(!feof(f)){
+		c=fgetc(f);
+		if(c==' '|| c=='\n') {
+			if(before) count++;
+			before=false;
+			newstart=true;
+			index=0;		
+		}else{
+		if((newstart||before)&&c==word[index]&&index<l) {before=true;newstart=false;}
+		else {before=false;newstart=false;}
+		index++;}	
+	}
+	
+	//print("%d",count);
+	return count;
+}
+
+int insert (string path, string content, int ln, int col){
+//success 1, fail 0
+//col begins from 0
+	file f;
+	file temp;
+	int line;
+	int colm;
+	char c;
+	
+	f=fopen(path,"r");
+	remove("HopeNoFileGetsThisName.txt");
+	temp=fopen("HopeNoFileGetsThisName.txt","a");
+	line=1;
+	while(line<ln){
+		if(feof(f)) {remove("HopeNoFileGetsThisName.txt");return 0;}
+		c=fgetc(f);
+		fputc(c,temp);
+		if(c=='\n') line++;
+	}
+	if(feof(f)){remove("HopeNoFileGetsThisName.txt");return 0;}
+	colm=0;
+	
+	while(colm<col){
+		if(feof(f)) {remove("HopeNoFileGetsThisName.txt");return 0;}
+		//print("%s\n","aaaa");
+		c=fgetc(f);
+		fputc(c,temp);
+		//print("%c\n",c);
+		colm++;
+	}
+	fputs(content,temp);
+	while(!feof(f)){
+		c=fgetc(f);
+		if(!feof(f)) fputc(c,temp);	
+	}	
+	return 1;
+	
+}
+
+int getChar(string path, int ln, int col){
+//success 1, fail 0
+	
+	char c;
+	int line;
+	file f;
+	int count;
+	
+
+	c='a';
+	line=1;
+	f=fopen(path,"r");
+	
+	if(ln<=0||col<=0) return 0;
+	while(line<ln){
+		c='a';
+		while(c!='\n'){
+			if(feof(f)) return 0;
+			c=fgetc(f);
+		}
+		line++;
+		if(feof(f)) return 0;
+	}
+	count=0;
+	while(count<col){
+		if(feof(f)) return 0;
+		count++;
+		c=fgetc(f);
+	}
+	if(feof(f)||c=='\n') return 0;
+	print("%c\n",c);
+	return 1;
+}
+
+
+int deleteLine(string path, int start, int end){
+//success returns 1, otherwise 0
+	file f;
+	file temp;
+	int count;
+	char c;
+	
+	if(start>end||start<=0||end<=0) return 0;
+	f=fopen(path,"r");
+	temp=fopen("HopeNoFileGetsThisName.txt","a");
+	count=1;
+	while(count<start){
+		if(feof(f)) {remove("HopeNoFileGetsThisName.txt");return 0;}
+		c=fgetc(f);
+		if (c=='\n') count++;
+		fputc(c,temp);
+	}
+	while(count<=end){
+		c=fgetc(f);
+		if (c=='\n') count++;
+	}
+	while(!feof(f)){
+		c=fgetc(f);
+		if(!feof(f)) fputc(c,temp);
+	}
+	remove(path);
+	rename("HopeNoFileGetsThisName.txt",path);
+	return 1;
+
+}
+
+
+
+
+int countline(string path){
+	int count;
+	char c;
+	file f;
+
+	
+	
+	count=1;
+	f=fopen(path,"r");
+
+	
+	while(!feof(f)){
+	c=fgetc(f);
+	if(c=='\n') count++;
+	}
+	return count;
+}
+
+
+
+int splitfile(string obj_path1, string obj_path2, string ori_path, int ln, int col){
+
+	file obj1;
+	file obj2;
+	file ori;
+	char c;
+	int count_ln;
+	int count_col;
+
+	count_ln=1;
+	ori=fopen(ori_path,"r");
+	obj1=fopen(obj_path1,"a");
+	obj2=fopen(obj_path2,"a");
+	while(count_ln<ln){
+		c=fgetc(ori);
+		//print("%c",c);
+		if(c=='\n') count_ln++;
+		fputc(c,obj1);
+	}
+	//print("%d",col);
+	count_col=1;
+	//print("%d",col);
+	while(count_col<col){
+		c=fgetc(ori);
+		//print("%c",c);
+		fputc(c,obj1);
+		count_col++;
+	}
+
+	while(!feof(ori)){
+		c=fgetc(ori);
+		if(!feof(ori)) fputc(c,obj2);
+	}
+	return 1;
+
+
+
+}
+
+
+void mergefile(string object, string path1, string path2){
+	
+	copyfile(path1,object);
+	
+	fputs("\n",fopen(object,"a"));
+
+	copyfile(path2,object);
+
+}
+
+
+
+void copyfile(string path1, string path2){
+	//from path1 to path 2
+	file f_ori;
+	file f_new;
+	char c;
+	string s;
+
+	
+	f_ori=fopen(path1,"r");
+	f_new=fopen(path2,"a");
+	while(!feof(f_ori)){
+	c=fgetc(f_ori);
+	if(!feof(f_ori)) fputc(c,f_new);
+	}
+	
+}
+
+int getLine(string path, int ln){
+//success 1, fail 0
+	int count;
+	file f;
+	char c;
+
+	count=1;
+	f=fopen(path,"r");
+	if(ln<=0) return 0;
+	while(count<ln){
+	//no local variable here
+		
+		c='a';
+		while(c!='\n'){
+			if(feof(f)) return 0;
+			c=fgetc(f);
+			//print("%c",c);
+		}
+		count++;
+		if(feof(f)) return 0;
+		
+	}
+	//print("%d\n",count);
+	c=fgetc(f);
+	if(feof(f)) return 0;
+	while(c!='\n'){	
+		print("%c",c);
+		c=fgetc(f);
+	}
+
+/*
+	if(feof(f)) return 0;
+	c='a';
+
+	while(c!='\n'){
+		c=fgetc(f);
+		print("%c",c);
+	}*/
+	print("\n");
+	return 1;
+	
+}
+
+
