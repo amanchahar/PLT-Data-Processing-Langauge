@@ -11,7 +11,8 @@
 
 
 let alpha = ['a'-'z' 'A'-'Z']
-let escape = '\\' ['\\' ''' '"' 'n' 'r' 't']
+let hex = ['0'-'9' 'a'-'f' 'A'-'F']
+let escape = '\\' (['\\' ''' '"' 'n' 'r' 't']|'x'hex hex)
 let escape_char = ''' (escape) '''
 let ascii = ([' '-'!' '#'-'[' ']'-'~'])
 let digit = ['0'-'9']

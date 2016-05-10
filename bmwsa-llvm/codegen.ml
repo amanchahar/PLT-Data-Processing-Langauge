@@ -319,6 +319,8 @@ let rec translate (A.Program(first, second), A.Program(first1,second1)) =
   and fputc_t=(L.function_type i8_t [|i8_t;str_t|])
   and fremove_t=(L.function_type i32_t [|str_t|])
   and frename_t=(L.function_type i32_t [|str_t;str_t|])
+  and memcpy_t = (L.function_type i8_t [|str_t;str_t;i32_t|])
+  and malloc_t = (L.function_type str_t [|i32_t|])
 in
   let printf_func = L.declare_function "printf" printf_t the_module 
   and feof_fun=L.declare_function "feof" feof_t the_module
@@ -330,6 +332,8 @@ in
   and fputc_fun=L.declare_function "fputc" fputc_t the_module
   and fremove_fun=L.declare_function "remove" fremove_t the_module
   and frename_fun=L.declare_function "rename" frename_t the_module
+  and memcpy_fun = L.declare_function "memcpy" memcpy_t the_module
+  and malloc_fun = L.declare_function "malloc" malloc_t the_module
 in 
 
 
@@ -426,7 +430,7 @@ let rec expr builder = function
   and para3=(expr builder e3) 
   in let k=L.build_in_bounds_gep para1 [|para2|] "tmpp" builder in
   L.build_store para3 k builder
-  
+
 
       | A.Binop (e1, op, e2) ->
 	  let e1' = expr builder e1
@@ -476,7 +480,10 @@ and tp3=(L.type_of e1') in
   L.build_call frename_fun (Array.of_list actuals) "tmp2" builder 
       | A.Call ("fff", [e;f]) -> let cnt=expr builder e and cnt2=expr builder f in
   L.build_call fputs_fun [|cnt2;(L.build_call fopen_fun [|cnt;read_str|] "tmp0" builder)|] "tmp5" builder
-
+| A.Call ("memcpy",e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+      L.build_call memcpy_fun (Array.of_list actuals) "tmp8" builder 
+| A.Call ("malloc", e)-> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
+      L.build_call malloc_fun (Array.of_list actuals) "tmp6" builder 
       | A.Call ("fopen", e) -> let actuals = List.rev (List.map (expr builder) (List.rev e)) in
   L.build_call fopen_fun (Array.of_list actuals) "tmp2" builder 
   | A.Call ("fputc",e) ->let actuals = List.rev (List.map (expr builder) (List.rev e)) in
