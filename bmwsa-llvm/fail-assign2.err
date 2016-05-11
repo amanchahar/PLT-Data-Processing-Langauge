@@ -1,3 +1,0 @@
-Stored value type does not match pointer operand type!
-  store i32 48, i1* %b
- i1LLVM ERROR: Broken module found, compilation aborted!

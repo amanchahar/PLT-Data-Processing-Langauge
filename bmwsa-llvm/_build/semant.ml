@@ -110,7 +110,7 @@ let (globals, functions) = decls_val in
 
     (* Return the type of an expression or throw an exception *)
     let rec expr = function
-	Literal _ -> Int
+	     Literal _ -> Int
       | BoolLit _ -> Bool
       | String_Lit s -> String_t
       | Float_Lit _ -> Float

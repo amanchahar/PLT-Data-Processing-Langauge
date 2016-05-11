@@ -34,10 +34,6 @@ open Ast
 program:
     includes decls EOF { Program($1,$2) }
 
-/******************
-  INCLUDE
-******************/
-
 includes:
     /* nothing */ { [] }
     |   include_list  { List.rev $1 }
