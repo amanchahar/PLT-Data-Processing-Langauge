@@ -1,0 +1,30 @@
+string zero;
+string *u(string a,int c,string b){
+string *p;
+int i;
+p=new [c];
+p[0]=strtok(a,b);
+for(i=1;i<c;i++){
+
+	p[i]=strtok(zero,b);
+	
+}
+return p;
+}
+
+int main()
+{
+string a;
+string token;
+string t;
+string *d;
+int i;
+bool u;
+a="Aman Chahar Miao Yu Baokun Cheng Sikai Huang this is a sample code sepearted by the space and the function will return an array of strings each contains a word";
+d=u(a,30," ");
+for(i=0;i<30;i++){
+printx("%s\n",d[i]);
+}
+
+	return 0;
+}
