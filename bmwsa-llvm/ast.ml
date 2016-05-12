@@ -22,11 +22,10 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
-  | L of typ * string * dtype
   | Ary of string* expr
   | Aryasn of string* expr* expr
-  | Vectors of typ*string * expr
   | Init of string * expr 
+  | Null of expr
   | Noexpr
 
 type stmt =
@@ -86,6 +85,10 @@ let rec string_of_expr = function
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
+  | Ary(v,e) -> v ^ "[" ^ string_of_expr e ^ "]"
+  | Aryasn(v,e1,e2) -> v ^ "[" ^ string_of_expr e1 ^ "]" ^ string_of_expr e2
+  | Init(v,e) -> v ^ "=" ^ "new" ^ "[" ^ string_of_expr e ^ "]"
+  | Null(e) -> "null" ^ "(" ^ string_of_expr e ^ ")"
 
 let rec string_of_stmt = function
     Block(stmts) ->
@@ -107,6 +110,8 @@ let string_of_typ = function
   | String_t -> "string"
   | Float -> "float"
   | Char -> "char"
+  | Intptr -> "int *"
+  | String_p -> "string *"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
