@@ -57,18 +57,19 @@ let (globals, functions) = decls_val in
 
   let built_in_decls =  
 
-  StringMap.add "fputs" { typ = String_t; fname = "fputs"; formals = [(String_t,"x");(String_t,"x")];
+      StringMap.add "fopen" { typ = String_t; fname = "fopen"; formals = [(String_t,"x");(String_t,"x")];
        locals = []; body = [] } 
-(StringMap.add "fopen" { typ = String_t; fname = "fopen"; formals = [(String_t,"x");(String_t,"x")];
-       locals = []; body = [] } 
-(
-     StringMap.add "print"
-     { typ = Void; fname = "print"; formals = [(Int, "x")];
-       locals = []; body = [] } 	
-      (StringMap.singleton "printstring"
-     {
-	typ = Void; fname= "printstring"; formals = [(String_t, "x")];
-	locals =[]; body=[] })))
+      (StringMap.add "fputs" { typ = String_t; fname = "fputs"; formals = [(String_t,"x");(String_t,"x")];
+             locals = []; body = [] } 
+            (StringMap.add "printx" { typ = String_t; fname = "printx"; formals = [(String_t,"x");(String_t,"x")];
+             locals = []; body = [] } 
+           (StringMap.add "print"
+           { typ = Void; fname = "print"; formals = [(Int, "x")];
+             locals = []; body = [] }   
+            (StringMap.singleton "printstring"
+           {
+        typ = Void; fname= "printstring"; formals = [(String_t, "x")];
+        locals =[]; body=[] }))))
       (*(StringMap.singleton "printb" 
      { typ = Void; fname = "printb"; formals = [(Bool, "x")];
        locals = []; body = [] }) *)
@@ -110,7 +111,7 @@ let (globals, functions) = decls_val in
 
     (* Return the type of an expression or throw an exception *)
     let rec expr = function
-	     Literal _ -> Int
+	Literal _ -> Int
       | BoolLit _ -> Bool
       | String_Lit s -> String_t
       | Float_Lit _ -> Float
@@ -120,11 +121,11 @@ let (globals, functions) = decls_val in
 	
         
         (match op with
-         Add | Sub -> (match(t1,t2) with (Int,Int) -> Int | (Float,Float) -> Float | (Float,Int) -> Float | (Int,Float) -> Float | (String_t,String_t) -> String_t | _->raise (Failure ("illegal binary operator " ^
+         Add | Sub -> (match(t1,t2) with (Int,Int) -> Int | (Float,Float) -> Float | (Float,Int) -> Float | (Int,Float) -> Int | (String_t,String_t) -> String_t | (Char,Char) -> Char| _->raise (Failure ("illegal binary operator " ^
               string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
               string_of_typ t2 ^ " in " ^ string_of_expr e)) )
          
-          | Mult | Div -> (match(t1,t2) with (Int,Int)->Int|(Float,Float)->Float|_-> raise (Failure ("illegal binary operator " ^
+          | Mult | Div -> (match(t1,t2) with (Int,Int)->Int|(Float,Float)->Float| (Char,Char)->Char|(Float,Int)->Float| (Int,Float)-> Int|_-> raise (Failure ("illegal binary operator " ^
               string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
               string_of_typ t2 ^ " in " ^ string_of_expr e)) )
           | Equal | Neq when t1 = t2 -> Bool
@@ -134,6 +135,25 @@ let (globals, functions) = decls_val in
               string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
               string_of_typ t2 ^ " in " ^ string_of_expr e))
         )
+
+
+        | Init(var, lit) -> let a= type_of_identifier var and b= expr lit in 
+        (match b with Int -> a
+                | _ -> raise(Failure("illegal " ^string_of_typ b^ ", expected int")) )
+        | Null(e) -> let k=expr e in (match k with Void -> raise(Failure("no void expression expected"))
+                              |_-> Bool)
+        | Ary(var,_) -> let k=function Intptr ->Int
+                                    | String_t -> Char
+                                    | String_p -> String_t
+                                    | _->raise(Failure("illegal ID as array"))
+      in k (type_of_identifier var)
+        | Aryasn(var,_,_) ->let k=function Intptr ->Int
+                                    | String_t -> Char
+                                    | String_p -> String_t
+                                    | _->raise(Failure("illegal ID as array"))
+      in k (type_of_identifier var)
+
+                                  
 
 
 

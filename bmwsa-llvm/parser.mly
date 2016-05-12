@@ -5,7 +5,7 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA RBRACKET LBRACKET INCLUDE
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT SPLUS SMINUS
+%token PLUS MINUS TIMES DIVIDE ASSIGN NOT SPLUS SMINUS NULL
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL VOID FLOAT CHAR STRING NEW
 %token <int> LITERAL
@@ -33,6 +33,10 @@ open Ast
 
 program:
     includes decls EOF { Program($1,$2) }
+
+/******************
+  INCLUDE
+******************/
 
 includes:
     /* nothing */ { [] }
@@ -78,12 +82,6 @@ typ:
   | STRING TIMES { String_p } 
 
 
-array_t: 
-	typ ID LBRACKET brackets RBRACKET {    L($1,$2,Arraytype($1,$4)) }
-
-dtype:
-	 typ {  Dtype($1)  }
-	
 
 
 brackets:
@@ -97,6 +95,7 @@ vdecl_list:
 
 vdecl:
    typ ID SEMI { ($1, $2) }
+   
 
 stmt_list:
     /* nothing */  { [] }
@@ -126,7 +125,6 @@ expr:
   | FLOAT_LITERAL     {Float_Lit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
-  | typ ID LBRACKET expr RBRACKET { Vectors($1, $2, $4) }
   | ID               { Id($1) }
   | ID SPLUS         { Binop(Assign($1,Binop(Ast.Id($1), Add, Ast.Literal(1))),Sub,Ast.Literal(1))}
   | ID SMINUS        { Binop(Assign($1,Binop(Ast.Id($1), Sub, Ast.Literal(1))),Add,Ast.Literal(1))}
@@ -152,6 +150,7 @@ expr:
   | ID LBRACKET expr  RBRACKET { Ary($1,$3) }
   | ID LBRACKET expr  RBRACKET ASSIGN expr { Aryasn($1,$3,$6) }
   | ID ASSIGN NEW LBRACKET expr RBRACKET { Init($1,$5) }
+  | NULL LPAREN expr RPAREN { Null($3) }
 
 
 actuals_opt:

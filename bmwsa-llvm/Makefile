@@ -73,4 +73,6 @@ TESTFILES = $(TESTS:%=test-%.bmwsa) $(TESTS:%=test-%.out) \
 TARFILES = ast.ml codegen.ml Makefile bmwsa.ml parser.mly README scanner.mll \
 	semant.ml testall.sh $(TESTFILES:%=tests/%)
 
-
+bmwsa-llvm.tar.gz : $(TARFILES)
+	cd .. && tar czf bmwsa-llvm/bmwsa-llvm.tar.gz \
+		$(TARFILES:%=bmwsa-llvm/%)
