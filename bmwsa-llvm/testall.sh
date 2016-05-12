@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Regression testing script for MicroC
+# Regression testing script for bmwsa
 # Step through a list of files
 #  Compile, run, and check the output of each expected-to-work test
 #  Compile and check the error of each expected-to-fail test
@@ -9,10 +9,10 @@
 LLI="lli"
 #LLI="/usr/local/opt/llvm/bin/lli"
 
-# Path to the microc compiler.  Usually "./microc.native"
-# Try "_build/microc.native" if ocamlbuild was unable to create a symbolic link.
-BMWSA="./bmwsa.native"
-#MICROC="_build/bmwsa"
+# Path to the bmwsa compiler.  Usually "./bmwsa.native"
+# Try "_build/bmwsa.native" if ocamlbuild was unable to create a symbolic link.
+bmwsa="./bmwsa.native"
+#bmwsa="_build/bmwsa.native"
 
 # Set time limit for all operations
 ulimit -t 30
@@ -86,7 +86,7 @@ Check() {
     generatedfiles=""
 
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.out" &&
-    Run "$BMWSA" "<" $1 ">" "${basename}.ll" &&
+    Run "$bmwsa" "<" $1 ">" "${basename}.ll" &&
     Run "$LLI" "${basename}.ll" ">" "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
@@ -119,7 +119,7 @@ CheckFail() {
     generatedfiles=""
 
     generatedfiles="$generatedfiles ${basename}.err ${basename}.diff" &&
-    RunFail "$MICROC" "<" $1 "2>" "${basename}.err" ">>" $globallog &&
+    RunFail "$bmwsa" "<" $1 "2>" "${basename}.err" ">>" $globallog &&
     Compare ${basename}.err ${reffile}.err ${basename}.diff
 
     # Report the status and clean up the generated files
